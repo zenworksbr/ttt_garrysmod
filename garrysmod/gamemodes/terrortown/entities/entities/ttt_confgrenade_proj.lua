@@ -1,4 +1,3 @@
-
 AddCSLuaFile()
 
 ENT.Type = "anim"
@@ -6,7 +5,7 @@ ENT.Base = "ttt_basegrenade_proj"
 ENT.Model = Model("models/weapons/w_eq_fraggrenade_thrown.mdl")
 
 local ttt_allow_jump = CreateConVar("ttt_allow_discomb_jump", "0")
- 
+
 local function PushRadius(pos, pusher)
    local radius = 400
    local phys_force = 1500
