@@ -13,6 +13,8 @@ if CLIENT then
    SWEP.IconLetter      = "P"
 end
 
+SWEP.PrintName       = "Granada incendiária"
+
 SWEP.Base               = "weapon_tttbasegrenade"
 
 SWEP.Kind               = WEAPON_NADE

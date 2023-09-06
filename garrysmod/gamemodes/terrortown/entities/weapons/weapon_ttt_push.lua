@@ -2,11 +2,11 @@ AddCSLuaFile()
 
 DEFINE_BASECLASS "weapon_tttbase"
 
-SWEP.HoldType               = "physgun"
+SWEP.HoldType               = "shotgun"
 
 if CLIENT then
-   SWEP.PrintName           = "newton_name"
-   SWEP.Slot                = 7
+   
+   SWEP.Slot                = 8
 
    SWEP.ViewModelFlip       = false
    SWEP.ViewModelFOV        = 54
@@ -16,8 +16,10 @@ if CLIENT then
       desc = "newton_desc"
    };
 
-   SWEP.Icon               = "vgui/ttt/icon_launch"
+   SWEP.Icon               = "vgui/ttt/icon_supernewtonbs"
 end
+
+SWEP.PrintName           = "Lançador de Newton"
 
 SWEP.Base                  = "weapon_tttbase"
 
@@ -25,26 +27,26 @@ SWEP.Primary.Ammo          = "none"
 SWEP.Primary.ClipSize      = -1
 SWEP.Primary.DefaultClip   = -1
 SWEP.Primary.Automatic     = true
-SWEP.Primary.Delay         = 3
+SWEP.Primary.Delay         = 6
 SWEP.Primary.Cone          = 0.005
-SWEP.Primary.Sound         = Sound( "weapons/ar2/fire1.wav" )
+SWEP.Primary.Sound         = Sound( "weapons/disparonewton.wav" )
 SWEP.Primary.SoundLevel    = 54
 
-SWEP.Secondary.ClipSize    = -1
-SWEP.Secondary.DefaultClip = -1
+SWEP.Secondary.ClipSize    = 10
+SWEP.Secondary.DefaultClip = 10
 SWEP.Secondary.Automatic   = false
 SWEP.Secondary.Ammo        = "none"
-SWEP.Secondary.Delay       = 0.5
+SWEP.Secondary.Delay       = 0.8
 
 SWEP.NoSights              = true
 
-SWEP.Kind                  = WEAPON_EQUIP2
+SWEP.Kind                  = WEAPON_ROLE
 SWEP.CanBuy                = {ROLE_TRAITOR}
 SWEP.WeaponID              = AMMO_PUSH
 
 SWEP.UseHands              = true
-SWEP.ViewModel             = "models/weapons/c_superphyscannon.mdl"
-SWEP.WorldModel            = "models/weapons/w_physics.mdl"
+SWEP.ViewModel             = "models/weapons/c_supernewtonbs.mdl"
+SWEP.WorldModel            = "models/weapons/w_supernewtonbs.mdl"
 
 AccessorFuncDT(SWEP, "charge", "Charge")
 
@@ -52,7 +54,7 @@ SWEP.IsCharging            = false
 SWEP.NextCharge            = 0
 
 local CHARGE_AMOUNT = 0.02
-local CHARGE_DELAY = 0.025
+local CHARGE_DELAY = 0.02
 
 local math = math
 
@@ -63,17 +65,21 @@ function SWEP:Initialize()
    return self.BaseClass.Initialize(self)
 end
 
+game.AddParticles( "particles/tttsupernewtonbs.pcf" )
+
 function SWEP:SetupDataTables()
    self:DTVar("Float", 0, "charge")
 end
 
 function SWEP:PrimaryAttack()
    if self.IsCharging then return end
+   
+   self.Primary.Delay = 4	-- Min Time of waiting for the gun to recharge
 
    self:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
    self:SetNextSecondaryFire( CurTime() + self.Primary.Delay )
 
-   self:FirePulse(600, 300)
+   self:FirePulse(1000, 800)
 end
 
 function SWEP:SecondaryAttack()
@@ -81,33 +87,54 @@ function SWEP:SecondaryAttack()
 
    self:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
    self:SetNextSecondaryFire( CurTime() + self.Primary.Delay )
+   self:SendWeaponAnim(ACT_SHOTGUN_RELOAD_START)
+   self.Weapon:EmitSound( Sound("weapons/newtonaumentaenergia2.wav") )
 
    self.IsCharging = true
 end
 
 function SWEP:FirePulse(force_fwd, force_up)
-   if not IsValid(self:GetOwner()) then return end
+   if not IsValid(self.Owner) then return end
+   
+   bullet = {}
+   bullet.Src    = self.Owner:GetShootPos()
+   bullet.Dir    = self.Owner:GetAimVector()
+   bullet.Spread = Vector( cone, cone, 0 )
+   bullet.Tracer = 1
+   bullet.Force  = force_fwd / 10
+   bullet.TracerName = "AirboatGunHeavyTracer"
+   local num = 6
+   
+	if (force_fwd < 2000) then
+	   bullet.Num = 6
+	   bullet.Damage = 7
+	   self.Primary.Delay = 4
 
-   self:GetOwner():SetAnimation( PLAYER_ATTACK1 )
+   elseif (force_fwd < 3000) then
+	   bullet.Num = 7
+	   bullet.Damage = 8
+	   self.Primary.Delay = 5
+   
+   elseif (force_fwd < 4000) then
+	   bullet.Num = 8
+	   bullet.Damage = 8
+	   self.Primary.Delay = 6
+   
+   else
+	   bullet.Num = 9
+	   bullet.Damage = 9
+	   self.Primary.Delay = 8
+   end
+
+   self.Owner:SetAnimation( PLAYER_ATTACK1 )
 
    sound.Play(self.Primary.Sound, self:GetPos(), self.Primary.SoundLevel)
 
    self:SendWeaponAnim(ACT_VM_IDLE)
 
    local cone = self.Primary.Cone or 0.1
-   local num = 6
 
-   local bullet = {}
-   bullet.Num    = num
-   bullet.Src    = self:GetOwner():GetShootPos()
-   bullet.Dir    = self:GetOwner():GetAimVector()
-   bullet.Spread = Vector( cone, cone, 0 )
-   bullet.Tracer = 1
-   bullet.Force  = force_fwd / 10
-   bullet.Damage = 1
-   bullet.TracerName = "AirboatGunHeavyTracer"
-
-   local owner = self:GetOwner()
+   local owner = self.Owner
    local fwd = force_fwd / num
    local up = force_up / num
    bullet.Callback = function(att, tr, dmginfo)
@@ -125,14 +152,14 @@ function SWEP:FirePulse(force_fwd, force_up)
                         end
                      end
 
-   self:GetOwner():FireBullets( bullet )
+   self.Owner:FireBullets( bullet )
 
 end
 
-local CHARGE_FORCE_FWD_MIN = 300
-local CHARGE_FORCE_FWD_MAX = 700
-local CHARGE_FORCE_UP_MIN = 100
-local CHARGE_FORCE_UP_MAX = 350
+local CHARGE_FORCE_FWD_MIN = 1000
+local CHARGE_FORCE_FWD_MAX = 4000
+local CHARGE_FORCE_UP_MIN = 800
+local CHARGE_FORCE_UP_MAX = 2000
 function SWEP:ChargedAttack()
    local charge = math.Clamp(self:GetCharge(), 0, 1)
    
@@ -150,6 +177,19 @@ function SWEP:ChargedAttack()
    diff = max - CHARGE_FORCE_UP_MIN
 
    local force_up = ((charge * diff) - diff) + max
+   
+   if (force_fwd < 2000) then
+	   self.Primary.Delay = 4
+
+   elseif (force_fwd < 3000) then
+	   self.Primary.Delay = 5
+   
+   elseif (force_fwd < 4000) then
+	   self.Primary.Delay = 6
+   
+   else
+	   self.Primary.Delay = 8
+   end
 
    self:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
    self:SetNextSecondaryFire( CurTime() + self.Primary.Delay )
@@ -255,7 +295,7 @@ if CLIENT then
          surface.SetFont("TabLarge")
          surface.SetTextColor(255, 255, 255, 180)
          surface.SetTextPos( (x - w / 2) + 3, y - h - 15)
-         surface.DrawText("FORCE")
+         surface.DrawText("FORÇA")
       end
    end
 end

@@ -174,7 +174,7 @@ function ENT:Explode(tr)
 
       local corpses = self:GetNearbyCorpses()
       if #corpses > self.MaxScenesPerPulse then
-         table.SortByMember(corpses, "dist", true)
+         table.SortByMember(corpses, "dist", function(a, b) return a > b end)
       end
 
       local e = EffectData()

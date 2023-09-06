@@ -3,7 +3,7 @@ AddCSLuaFile()
 SWEP.HoldType              = "pistol"
 
 if CLIENT then
-   SWEP.PrintName          = "pistol_name"
+   
    SWEP.Slot               = 1
 
    SWEP.ViewModelFlip      = false
@@ -13,14 +13,17 @@ if CLIENT then
    SWEP.IconLetter         = "u"
 end
 
+SWEP.PrintName          = "Five-seveN"
+
 SWEP.Base                  = "weapon_tttbase"
 
 SWEP.Kind                  = WEAPON_PISTOL
 SWEP.WeaponID              = AMMO_PISTOL
 
 SWEP.Primary.Recoil        = 1.5
-SWEP.Primary.Damage        = 25
-SWEP.Primary.Delay         = 0.38
+SWEP.Primary.Damage        = 19
+SWEP.HeadshotMultiplier    = 1.7
+SWEP.Primary.Delay         = 0.3
 SWEP.Primary.Cone          = 0.02
 SWEP.Primary.ClipSize      = 20
 SWEP.Primary.Automatic     = true
@@ -36,5 +39,4 @@ SWEP.UseHands              = true
 SWEP.ViewModel             = "models/weapons/cstrike/c_pist_fiveseven.mdl"
 SWEP.WorldModel            = "models/weapons/w_pist_fiveseven.mdl"
 
-SWEP.IronSightsPos         = Vector(-5.95, -4, 2.799)
-SWEP.IronSightsAng         = Vector(0, 0, 0)
+SWEP.NoSights              = true

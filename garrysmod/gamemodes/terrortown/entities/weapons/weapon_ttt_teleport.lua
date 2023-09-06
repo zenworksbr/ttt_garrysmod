@@ -21,10 +21,13 @@ if CLIENT then
    SWEP.Icon               = "vgui/ttt/icon_tport"
 end
 
+SWEP.PrintName             = "Teletransportador"
+
 SWEP.Base                  = "weapon_tttbase"
 
 SWEP.ViewModel             = "models/weapons/v_crowbar.mdl"
 SWEP.WorldModel            = "models/weapons/w_slam.mdl"
+SWEP.LimitedStock		   = true
 
 SWEP.Primary.ClipSize      = 16
 SWEP.Primary.DefaultClip   = 16
@@ -47,7 +50,7 @@ SWEP.NoSights              = true
 local delay_beamup = 1
 local delay_beamdown = 1
 
-local ttt_telefrags = CreateConVar("ttt_teleport_telefrags", "1")
+local ttt_telefrags = CreateConVar("ttt_teleport_telefrags", "0")
 
 function SWEP:SetTeleportMark(pos, ang)
    self.teleport = {pos = pos, ang = ang}

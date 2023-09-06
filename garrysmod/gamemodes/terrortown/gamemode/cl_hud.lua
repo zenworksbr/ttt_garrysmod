@@ -170,7 +170,7 @@ local function PunchPaint(client)
    end
 end
 
-local key_params = { usekey = Key("+use", "USE") }
+local key_params = {reloadkey = Key("+reload", "RELOAD")}
 
 local function SpecHUDPaint(client)
    local L = GetLang() -- for fast direct table lookups

@@ -38,6 +38,9 @@ local bodyfound = CreateConVar("ttt_announce_body_found", "1")
 
 function GM:TTTCanIdentifyCorpse(ply, corpse, was_traitor)
    -- return true to allow corpse identification, false to disallow
+   
+   -- impedir que inocentes e detetives identifiquem corpos queimados
+   if corpse.was_burned and !ply:IsActiveDetective() then return false end
    return true
 end
 
@@ -49,15 +52,17 @@ local function IdentifyBody(ply, rag)
       CORPSE.SetFound(rag, true)
       return
    end
-
+   
    if not hook.Run("TTTCanIdentifyCorpse", ply, rag, (rag.was_role == ROLE_TRAITOR)) then
+      -- por enquanto, deixar essa verificação neste arquivo
+      if corpse.was_burned and !ply:IsActiveDetective() then return false end
       return
    end
 
    local finder = ply:Nick()
    local nick = CORPSE.GetPlayerNick(rag, "")
    local traitor = (rag.was_role == ROLE_TRAITOR)
-
+   
    -- Announce body
    if bodyfound:GetBool() and not CORPSE.GetFound(rag, false) then
       local roletext = nil
@@ -90,6 +95,10 @@ local function IdentifyBody(ply, rag)
       end
       hook.Call( "TTTBodyFound", GAMEMODE, ply, deadply, rag )
       CORPSE.SetFound(rag, true)
+   else
+      -- re-set because nwvars are unreliable
+      --CORPSE.SetFound(rag, true)
+      --CORPSE.SetPlayerNick(rag, nick)
    end
 
    -- Handle kill list
@@ -103,6 +112,11 @@ local function IdentifyBody(ply, rag)
 
          -- update scoreboard status
          vic:SetNWBool("body_found", true)
+
+         -- however, do not mark body as found. This lets players find the
+         -- body later and get the benefits of that
+         --local vicrag = vic.server_ragdoll
+         --CORPSE.SetFound(vicrag, true)
       end
    end
 end
@@ -115,6 +129,7 @@ local function IdentifyCommand(ply, cmd, args)
    local eidx = tonumber(args[1])
    local id = tonumber(args[2])
    if (not eidx) or (not id) then return end
+
 
    if (not ply.search_id) or ply.search_id.id != id or ply.search_id.eidx != eidx then
       ply.search_id = nil
@@ -142,12 +157,7 @@ local function CallDetective(ply, cmd, args)
    if not eidx then return end
 
    local rag = Entity(eidx)
-   if not (IsValid(rag) and rag.player_ragdoll) then return end
-
-   if ((rag.last_detective_call or 0) < (CurTime() - 5)) and (rag:GetPos():Distance(ply:GetPos()) < 128) then
-
-      rag.last_detective_call = CurTime()
-
+   if IsValid(rag) and rag:GetPos():Distance(ply:GetPos()) < 128 then
       if CORPSE.GetFound(rag, false) then
          -- show indicator to detectives
          net.Start("TTT_CorpseCall")
@@ -185,8 +195,15 @@ function CORPSE.ShowSearch(ply, rag, covert, long_range)
    if rag:IsOnFire() then
       LANG.Msg(ply, "body_burning")
       return
+   -- cadeia de ifs bem feia, talvez remova num futuro
+   elseif (rag:GetNWBool("was_burned") and rag.was_headshot and !ply:IsActiveDetective()) then
+      LANG.Msg(ply, "burned_corpse_headshot")
+      return
+   elseif (rag:GetNWBool("was_burned") and !ply:IsActiveDetective()) then
+      LANG.Msg(ply, "burned_corpse")
+      return
    end
-
+   
    if not hook.Run("TTTCanSearchCorpse", ply, rag, covert, long_range, (rag.was_role == ROLE_TRAITOR)) then
       return
    end
@@ -202,7 +219,7 @@ function CORPSE.ShowSearch(ply, rag, covert, long_range)
    local words = rag.last_words or ""
    local hshot = rag.was_headshot or false
    local dtime = rag.time or 0
-
+   
    local owner = player.GetBySteamID(rag.sid)
    owner = IsValid(owner) and owner:EntIndex() or -1
 
@@ -372,12 +389,15 @@ end
 
 local rag_collide = CreateConVar("ttt_ragdoll_collide", "0")
 
+-- gambiarra pra evitar bugs. TEMPORÁRIO
+hook.Add('PlayerSpawn', 'TTTPreventPermanentDeathCauseBurned', function(ply)
+   ply:SetVar('died_by_dart_flare_combo', nil)
+   ply:SetVar('died_by_jihad', nil)
+end)
+
 -- Creates client or server ragdoll depending on settings
 function CORPSE.Create(ply, attacker, dmginfo)
    if not IsValid(ply) then return end
-
-   local efn = ply.effect_fn
-   ply.effect_fn = nil
 
    local rag = ents.Create("prop_ragdoll")
    if not IsValid(rag) then return nil end
@@ -386,10 +406,14 @@ function CORPSE.Create(ply, attacker, dmginfo)
    rag:SetModel(ply:GetModel())
    rag:SetSkin(ply:GetSkin())
    for key, value in pairs(ply:GetBodyGroups()) do
-      rag:SetBodygroup(value.id, ply:GetBodygroup(value.id))
+      rag:SetBodygroup(value.id, ply:GetBodygroup(value.id))	
    end
    rag:SetAngles(ply:GetAngles())
    rag:SetColor(ply:GetColor())
+
+   if ply.died_by_jihad or ply.died_by_dart_flare_combo then 
+      rag:SetNWBool("was_burned", true)
+   end
 
    rag:Spawn()
    rag:Activate()
@@ -453,11 +477,12 @@ function CORPSE.Create(ply, attacker, dmginfo)
    end
 
    -- create advanced death effects (knives)
-   if efn then
+   if ply.effect_fn then
       -- next frame, after physics is happy for this ragdoll
-      timer.Simple(0, function() if IsValid(rag) then efn(rag) end end)
+      local efn = ply.effect_fn
+      timer.Simple(0, function() efn(rag) end)
    end
-
+   
    hook.Run("TTTOnCorpseCreated", rag, ply)
 
    return rag -- we'll be speccing this

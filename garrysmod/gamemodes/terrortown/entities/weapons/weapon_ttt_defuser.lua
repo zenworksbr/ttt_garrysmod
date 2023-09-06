@@ -4,7 +4,7 @@ SWEP.HoldType                = "slam"
 
 if CLIENT then
    SWEP.PrintName            = "defuser_name"
-   SWEP.Slot                 = 7
+   SWEP.Slot                 = 3
 
    SWEP.DrawCrosshair        = false
    SWEP.ViewModelFOV         = 10
@@ -34,7 +34,8 @@ SWEP.Secondary.Automatic      = true
 SWEP.Secondary.Ammo           = "none"
 SWEP.Secondary.Delay          = 2
 
-SWEP.Kind                     = WEAPON_EQUIP2
+SWEP.Kind                     = WEAPON_NADE
+SWEP.LimitedStock			  = true
 SWEP.CanBuy                   = {ROLE_DETECTIVE} -- only detectives can buy
 SWEP.WeaponID                 = AMMO_DEFUSER
 

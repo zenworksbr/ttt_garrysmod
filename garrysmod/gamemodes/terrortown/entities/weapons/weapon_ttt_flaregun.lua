@@ -18,6 +18,8 @@ if CLIENT then
    SWEP.Icon               = "vgui/ttt/icon_flare"
 end
 
+SWEP.PrintName          = "Arma de Sinalizador"
+
 SWEP.Base                  = "weapon_tttbase"
 
 -- if I run out of ammo types, this weapon is one I could move to a custom ammo

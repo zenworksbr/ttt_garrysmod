@@ -164,9 +164,8 @@ function RADIO:ShowRadioCommands(state)
          radioframe:SetKeyboardInputEnabled(false)
 
          radioframe:CenterVertical()
-         
-         
-         -- This is not how you should do things
+
+         -- ASS
          radioframe.ForceResize = function(s)
                                      local w, label = 0, nil
                                      for k,v in pairs(s.Items) do
@@ -614,7 +613,8 @@ local function GetDrainRate()
    local ply = LocalPlayer()
    if (not IsValid(ply)) or ply:IsSpec() then return 0 end
 
-   if ply:IsAdmin() or ply:IsDetective() then
+   -- voice ilimitado para alguns cargos especificados em shared.lua
+   if ply:IsAdmin() or ply:IsDetective() or NO_VOICE_LIMIT_USERGROUPS[ply:GetUserGroup()] then
       return GetGlobalFloat("ttt_voice_drain_admin", 0)
    else
       return GetGlobalFloat("ttt_voice_drain_normal", 0)
@@ -634,7 +634,7 @@ function VOICE.Tick()
 
       if not VOICE.CanSpeak() then
          client.voice_battery = 0
-         RunConsoleCommand("-voicerecord")
+         client:ConCommand("-voicerecord")
       end
    elseif client.voice_battery < battery_max then
       client.voice_battery = client.voice_battery + GetRechargeRate()

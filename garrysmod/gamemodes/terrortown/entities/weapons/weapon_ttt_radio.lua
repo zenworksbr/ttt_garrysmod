@@ -6,7 +6,7 @@ SWEP.HoldType               = "normal"
 
 if CLIENT then
    SWEP.PrintName           = "radio_name"
-   SWEP.Slot                = 7
+   SWEP.Slot                = 3
 
    SWEP.ViewModelFlip       = false
    SWEP.ViewModelFOV        = 10
@@ -37,7 +37,7 @@ SWEP.Secondary.Automatic    = true
 SWEP.Secondary.Ammo         = "none"
 SWEP.Secondary.Delay        = 1.0
 
-SWEP.Kind                   = WEAPON_EQUIP2
+SWEP.Kind                   = WEAPON_NADE
 SWEP.CanBuy                 = {ROLE_TRAITOR} -- only traitors can buy
 SWEP.LimitedStock           = true -- only buyable once
 SWEP.WeaponID               = AMMO_RADIO
@@ -46,7 +46,7 @@ SWEP.AllowDrop              = false
 SWEP.NoSights               = true
 
 function SWEP:OnDrop()
-   self:Remove()
+   self:RadioDrop()
 end
 
 function SWEP:PrimaryAttack()

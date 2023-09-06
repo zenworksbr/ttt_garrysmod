@@ -3,8 +3,8 @@ AddCSLuaFile()
 SWEP.HoldType              = "ar2"
 
 if CLIENT then
-   SWEP.PrintName          = "stungun_name"
-   SWEP.Slot               = 6
+   
+   SWEP.Slot               = 2
 
    SWEP.ViewModelFlip      = false
    SWEP.ViewModelFOV       = 54
@@ -18,15 +18,17 @@ if CLIENT then
    SWEP.IconLetter         = "q"
 end
 
+SWEP.PrintName          = "Protótipo UMP"
+
 SWEP.Base                  = "weapon_tttbase"
 
-SWEP.Kind                  = WEAPON_EQUIP
+SWEP.Kind                  = WEAPON_HEAVY
 SWEP.WeaponID              = AMMO_STUN
 SWEP.CanBuy                = {ROLE_DETECTIVE}
 SWEP.LimitedStock          = false
 SWEP.AmmoEnt               = "item_ammo_smg1_ttt"
 
-SWEP.Primary.Damage        = 9
+SWEP.Primary.Damage        = 11
 SWEP.Primary.Delay         = 0.1
 SWEP.Primary.Cone          = 0.02
 SWEP.Primary.ClipSize      = 30

@@ -3,7 +3,7 @@ AddCSLuaFile()
 SWEP.HoldType                = "melee"
 
 if CLIENT then
-   SWEP.PrintName            = "crowbar_name"
+
    SWEP.Slot                 = 0
 
    SWEP.DrawCrosshair        = false
@@ -12,6 +12,8 @@ if CLIENT then
 
    SWEP.Icon                 = "vgui/ttt/icon_cbar"
 end
+
+SWEP.PrintName               = "Crowbar"
 
 SWEP.Base                    = "weapon_tttbase"
 
@@ -30,7 +32,7 @@ SWEP.Secondary.ClipSize      = -1
 SWEP.Secondary.DefaultClip   = -1
 SWEP.Secondary.Automatic     = true
 SWEP.Secondary.Ammo          = "none"
-SWEP.Secondary.Delay         = 5
+SWEP.Secondary.Delay         = 3
 
 SWEP.Kind                    = WEAPON_MELEE
 SWEP.WeaponID                = AMMO_CROWBAR
@@ -50,7 +52,7 @@ local sound_open = Sound("DoorHandles.Unlocked3")
 
 if SERVER then
    CreateConVar("ttt_crowbar_unlocks", "1", FCVAR_ARCHIVE)
-   CreateConVar("ttt_crowbar_pushforce", "395", FCVAR_NOTIFY)
+   CreateConVar("ttt_crowbar_pushforce", "600", FCVAR_NOTIFY)
 end
 
 -- only open things that have a name (and are therefore likely to be meant to

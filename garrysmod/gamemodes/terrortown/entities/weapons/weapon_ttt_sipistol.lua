@@ -3,8 +3,8 @@ AddCSLuaFile()
 SWEP.HoldType              = "pistol"
 
 if CLIENT then
-   SWEP.PrintName          = "sipistol_name"
-   SWEP.Slot               = 6
+   
+   SWEP.Slot               = 1
 
    SWEP.ViewModelFlip      = false
    SWEP.ViewModelFOV       = 54
@@ -18,26 +18,29 @@ if CLIENT then
    SWEP.IconLetter         = "a"
 end
 
+SWEP.PrintName          = "USP-S"
+
 SWEP.Base                  = "weapon_tttbase"
 
-SWEP.Primary.Recoil        = 1.35
-SWEP.Primary.Damage        = 28
-SWEP.Primary.Delay         = 0.38
-SWEP.Primary.Cone          = 0.02
-SWEP.Primary.ClipSize      = 20
+SWEP.Primary.Recoil        = 1.40
+SWEP.Primary.Damage        = 35
+SWEP.Primary.Delay         = 0.35
+SWEP.Primary.Cone          = 0.01
+SWEP.Primary.ClipSize      = 12
 SWEP.Primary.Automatic     = true
-SWEP.Primary.DefaultClip   = 20
-SWEP.Primary.ClipMax       = 60
+SWEP.Primary.DefaultClip   = 12
+SWEP.Primary.ClipMax       = 24
 SWEP.Primary.Ammo          = "Pistol"
 SWEP.Primary.Sound         = Sound( "Weapon_USP.SilencedShot" )
 SWEP.Primary.SoundLevel    = 50
 
-SWEP.Kind                  = WEAPON_EQUIP
+SWEP.Kind                  = WEAPON_PISTOL
 SWEP.CanBuy                = {ROLE_TRAITOR} -- only traitors can buy
 SWEP.WeaponID              = AMMO_SIPISTOL
 
 SWEP.AmmoEnt               = "item_ammo_pistol_ttt"
 SWEP.IsSilent              = true
+SWEP.LimitedStock		      = true
 
 SWEP.UseHands              = true
 SWEP.ViewModel             = "models/weapons/cstrike/c_pist_usp.mdl"
@@ -56,7 +59,7 @@ end
 
 -- We were bought as special equipment, and we have an extra to give
 function SWEP:WasBought(buyer)
-   if IsValid(buyer) then -- probably already self:GetOwner()
-      buyer:GiveAmmo( 20, "Pistol" )
+   if IsValid(buyer) and IsPlayer(buyer) then -- probably already self:GetOwner()
+      --buyer:GiveAmmo(24, "Pistol", true)
    end
 end

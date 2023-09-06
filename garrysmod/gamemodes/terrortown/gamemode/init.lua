@@ -476,7 +476,7 @@ function PrepareRound()
    KARMA.RoundBegin()
 
    -- New look. Random if no forced model set.
-   GAMEMODE.playermodel = GAMEMODE.force_plymodel == "" and GetRandomPlayerModel() or GAMEMODE.force_plymodel
+   GAMEMODE.playermodel = GetRandomPlayerModel() --GAMEMODE.force_plymodel == "" and GetRandomPlayerModel() or GAMEMODE.force_plymodel
    GAMEMODE.playercolor = hook.Call("TTTPlayerColor", GAMEMODE, GAMEMODE.playermodel)
 
    if CheckForAbort() then return end

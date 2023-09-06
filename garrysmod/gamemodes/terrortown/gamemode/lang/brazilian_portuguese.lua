@@ -55,7 +55,9 @@ L.body_call        = "{player} chamou um Detetive para investigar o corpo de {vi
 L.body_call_error  = "Você deve confirmar a morte deste jogador antes de chamar um Detetive!"
 
 L.body_burning     = "Eita! Este cadáver está pegando fogo!"
-L.body_credits     = "Você encontrou {num} crédito(s) no corpo!"
+L.burned_corpse = "Este corpo foi queimado! Não é possível obter informações sobre ele."
+L.burned_corpse_headshot = "Este corpo está carbonizado! Mas pelo menos sabemos que ele morreu por um tiro na cabeça!"
+L.body_credits = "Você encontrou {num} crédito(s) no corpo!"
 
 --- Menus and windows
 L.close = "Fechar"
@@ -161,6 +163,7 @@ L.quick_check   = "Alguém ainda está vivo?"
 L.quick_nobody    = "ninguém"
 L.quick_disg      = "alguém disfarçado"
 L.quick_corpse    = "um corpo não identificado"
+L.quick_burned    = "um corpo carbonizado"
 L.quick_corpse_id = "o cadáver de {player}"
 
 
@@ -257,6 +260,7 @@ L.set_fastswmenu_tip  = "Quando a troca rápida de arma estiver ativada, o popup
 L.set_wswitch         = "Desabilitar fechamento automático do menu de troca de armas"
 L.set_wswitch_tip     = "Por padrão, o menu de troca de armas fechará automaticamente após alguns segundos de seu aparecimento. Habilite isto para o menu nunca fechar."
 L.set_cues            = "Tocar um som quando uma rodada começar ou terminar"
+L.set_msg_cue         = "Tocar um som quando uma notificação aparecer"
 
 
 L.set_title_play    = "Configurações de jogabilidade"
@@ -579,10 +583,13 @@ L.karma_min    = "Irresponsável"
 
 -- TargetID misc
 L.corpse       = "Cadáver"
+L.corpse_burned = "Cadáver não identificado"
 L.corpse_hint  = "Pressione {usekey} para investigar. {walkkey} + {usekey} para investigar furtivamente."
+L.burned_hint = "Este corpo foi queimado. Somente um Detetive pode idenfiticá-lo."
 
 L.target_disg  = " (DISFARÇADO)"
 L.target_unid  = "Corpo não identificado"
+L.target_burned = "Corpo carbonizado"
 
 L.target_traitor = "TRAIDOR ALIADO"
 L.target_detective = "DETETIVE"
@@ -592,7 +599,7 @@ L.target_credits = "Vasculhe para receber créditos não gastos"
 -- Traitor buttons (HUD buttons with hand icons that only traitors can see)
 L.tbut_single  = "Uso único"
 L.tbut_reuse   = "Reutilizável"
-L.tbut_retime  = "Reutilizável após {num} segundos"
+L.tbut_retime  = "Reutilizável após {num} seg"
 L.tbut_help    = "Pressione {key} para ativar"
 
 -- Equipment info lines (on the left above the health/ammo panel)
@@ -611,7 +618,7 @@ L.punch_help   = "Movimentar-se ou pular: soca o objeto. Agachar-se: sai do obje
 L.punch_bonus  = "Sua má pontuação diminuiu seu limite do socômetro em {num}"
 L.punch_malus  = "Sua boa pontuação aumentou seu limite do socômetro em {num}!"
 
-L.spec_help    = "Clique para espectar jogadores, ou pressione {usekey} em um objeto para possuí-lo."
+L.spec_help    = "Clique para espectar jogadores, e pressione {reloadkey} para assistir em primeira pessoa."
 
 --- Info popups shown when the round starts
 
@@ -695,7 +702,7 @@ L.tip14 = "Quanto mais longe você estiver de alguém que você matar, mais rapi
 
 L.tip15 = "Você é um Traidor e quer tentar matar alguém com um rifle de precisão? Considere habilitar o Disfarce antes. Se você errar um tiro, fuja para um local seguro, desabilite o Disfarce, e ninguém saberá que era você que estava atirando neles."
 
-L.tip16 = "Como Traidor, o Teletransportador pode ajudá-lo a escapar enquanto estiver sendo perseguido, além de permitir que você se desloque rapidamente em um mapa grande. Certifique-se de sempre ter uma posição segura marcada."
+L.tip16 = "Como Traidor, o Teletransportador pode ajudar-lhe a escapar enquanto você estiver sendo perseguido, além de permitir que você se desloque rapidamente em um mapa grande. Certifique-se de sempre ter uma posição segura marcada."
 
 L.tip17 = "Os inocentes estão todos agrupados sendo difíceis de serem mortos? Considere experimentar o Rádio para reproduzir sons de um C4 ou de um tiroteio para fazer com que eles se desagrupem."
 
@@ -776,7 +783,7 @@ L.hilite_duration = "A rodada durou {time}"
 L.col_time   = "Tempo"
 L.col_event  = "Acontecimento"
 L.col_player = "Jogador"
-L.col_role   = "Cargo"
+L.col_role   = "Função"
 L.col_kills1 = "Inocentes mortos"
 L.col_kills2 = "Traidores mortos"
 L.col_points = "Pontos"
@@ -884,7 +891,7 @@ L.aw_nkt3_text  = "acabou com três vidas inocentes de terrorismo hoje."
 L.aw_nkt4_title = "O LOBO ENTRE LOBOS QUE MAIS PARECEM OVELHAS"
 L.aw_nkt4_text  = "comeu terroristas inocentes no jantar. Um jantar de {num} pratos."
 
-L.aw_nkt5_title = "OPERAÇÃO CONTRATERRORISTA"
+L.aw_nkt5_title = "OPERAÇÃO CONTRA-TERRORISTA"
 L.aw_nkt5_text  = "é pago por cada assassinato. Agora já pode comprar outro iate luxuoso."
 
 L.aw_nki1_title = "TRAIA ISTO"
@@ -959,7 +966,7 @@ L.aw_sip1_text  = "calou a boca de {num} pessoas com sua pistola silenciada."
 L.aw_sip2_title = "ASSASSINO SILENCIOSO"
 L.aw_sip2_text  = "matou {num} pessoas que não ouviram sua própria morte."
 
-L.aw_knf1_title = "ESFAQUEÁ-LO-EI"
+L.aw_knf1_title = "ESFAQUEAR-LHE-EI"
 L.aw_knf1_text  = "esfaqueou a cara de alguém pela internet."
 
 L.aw_knf2_title = "ONDE VOCÊ CONSEGUIU ISSO?"
@@ -1085,4 +1092,4 @@ L.idle_popup_title = "Ausência"
 L.sb_playervolume = "Volume do jogador"
 
 --- 2021-09-22
-L.tip41 = "Você pode ajustar o volume do microfone de um jogador ao clicar com o botão direito no ícone de silenciar dele no placar."
+L.tip41 = "Você pode ajustar o volume do microfone de um jogador ao clicar com o botão esquerdo no ícone de silenciar dele no placar."

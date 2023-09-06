@@ -358,11 +358,6 @@ end
 
 
 if CLIENT then
-
-   local T = LANG.GetTranslation
-   local PT = LANG.GetParamTranslation
-   local TT = LANG.TryTranslation
-   
    function SWEP:DrawHUD()
       self:DrawHelp()
 
@@ -410,7 +405,7 @@ if CLIENT then
          surface.SetFont("DefaultFixedDropShadow")
          surface.SetTextColor(0, 255, 0, 255)
          surface.SetTextPos( x + length*2, y - length*2 )
-         surface.DrawText(T("dna_hud_type") .. ": " .. (ent:GetClass() == "prop_ragdoll" and T("dna_hud_body") or T("dna_hud_item")))
+         surface.DrawText("TYPE: " .. (ent:GetClass() == "prop_ragdoll" and "BODY" or "ITEM"))
          surface.SetTextPos( x + length*2, y - length*2 + 15)
          surface.DrawText("ID:   #" .. ent:EntIndex())
       end
@@ -435,6 +430,9 @@ if CLIENT then
    end
 
    local last_panel_selected = 1
+   local T = LANG.GetTranslation
+   local PT = LANG.GetParamTranslation
+   local TT = LANG.TryTranslation
    local function ShowPrintsPopup(item_prints, tester)
       local m = 10
       local bw, bh = 100, 25
@@ -631,7 +629,7 @@ if CLIENT then
       dbut:SetSize(bw, bh)
       dbut:SetPos(m, h - bh - m/1.5)
       dbut:CenterHorizontal()
-      dbut:SetText(T("close"))
+      dbut:SetText("Close")
       dbut.DoClick = function() dpanel:Close() end
 
       dpanel:MakePopup()

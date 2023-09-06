@@ -68,11 +68,113 @@ MUTE_TERROR = 1
 MUTE_ALL = 2
 MUTE_SPEC = 1002
 
+-- globais exclusivas do servidor
+
+-- sim, isto está TERRÍVEL
+COLORED_NAME_USERGROUPS = {
+   ["STEAM_0:1:128559896"] = Color(200, 15, 15),
+   ["STEAM_0:0:443308993"] = Color(0, 0, 80)
+}
+
+NO_VOICE_LIMIT_USERGROUPS = {
+   donator = true,
+   operator = true,
+   operator_donator = true,
+   admin_donator = true,
+   helper = true,
+   helper_donator = true,
+   admin = true,
+   superadmin = true
+}
+
+SB_VIP_PERMS = {
+   donator = true,
+   operator_donator = true,
+   admin_donator = true,
+   superadmin = true
+}
+
+-- Cargos com menos permissões
+SB_BASE_PERMS = {
+   temp_helper = true,
+   helper = true,
+   operator = true,
+   operator_donator = true,
+   admin = true,
+   admin_donator = true,
+   superadmin = true
+}
+
+-- Cargos com mais permissões
+SB_MOD_PERMS = {
+   operator = true,
+   operator_donator = true,
+   admin = true,
+   admin_donator = true,
+   superadmin = true
+}
+
+-- Cargos com TODAS as permissões
+SB_FULL_PERMS = {
+   superadmin = true
+}
+
+-- nomes e ícones customizados para cada cargo do servidor
+-- utilizado caso algo dê errado com o addon atlaschat
+SCOREBOARD_DEFAULT_RANKS = {
+   user = {
+      name = "Jogador",
+      icon = "icon16/user.png"
+   },
+   temp_helper = {
+      name = "Ajudante Temporário",
+      icon = "icon16/plugin_error.png"
+   },
+   helper = {
+      name = "Ajudante",
+      icon = "icon16/plugin.png"
+   },
+   operator = {
+      name = "Moderador",
+      icon = "icon16/medal_silver_3.png"
+   },
+   operator_donator = {
+      name = "Moderador Doador",
+      icon = "icon16/award_star_gold_3"
+   },
+   admin = {
+      name = "Administrador",
+      icon = "icon16/award_star_bronze_1.png"
+   },
+   admin_donator = {
+      name = "Administrador Doador",
+      icon = "icon16/award_star_gold_1.png"
+   },
+   superadmin = {
+      name = "Administrador-Chefe",
+      icon = "icon16/asterisk_yellow.png"
+   }
+}
+
+-- modelos utilizados para corpos queimados 
+-- aplicável quando ocorre o combo arma de dardos + sinalizador
+-- e o utilizador da Jihad
+GlobalBurnedCorpseModelTTT = {
+   "models/Humans/Charple01.mdl",
+	"models/Humans/Charple02.mdl",
+	"models/Humans/Charple03.mdl",
+	"models/Humans/Charple04.mdl"
+   -- "models/players/gingerfast.mdl"
+}
+
+// -----------------------------------------------------------
+
 COLOR_WHITE  = Color(255, 255, 255, 255)
 COLOR_BLACK  = Color(0, 0, 0, 255)
 COLOR_GREEN  = Color(0, 255, 0, 255)
 COLOR_DGREEN = Color(0, 100, 0, 255)
 COLOR_RED    = Color(255, 0, 0, 255)
+COLOR_DRED   = Color(120, 0, 0, 255)
 COLOR_YELLOW = Color(200, 200, 0, 255)
 COLOR_LGRAY  = Color(200, 200, 200, 255)
 COLOR_BLUE   = Color(0, 0, 255, 255)
@@ -110,7 +212,10 @@ local ttt_playermodels = {
 };
 
 function GetRandomPlayerModel()
-   return table.Random(ttt_playermodels)
+
+   -- utilizar método mais ágil e eficiente de aleatorizar itens em uma tabela
+   -- BOAS PRÁTICAS...
+   return ttt_playermodels[ math.random( #ttt_playermodels ) ]
 end
 
 local ttt_playercolors = {
@@ -120,6 +225,7 @@ local ttt_playercolors = {
       COLOR_GREEN,
       COLOR_DGREEN,
       COLOR_RED,
+      COLOR_DRED,
       COLOR_YELLOW,
       COLOR_LGRAY,
       COLOR_BLUE,
@@ -132,6 +238,7 @@ local ttt_playercolors = {
    serious = {
       COLOR_WHITE,
       COLOR_BLACK,
+      COLOR_DRED,
       COLOR_NAVY,
       COLOR_LGRAY,
       COLOR_DGREEN,

@@ -19,13 +19,15 @@ if CLIENT then
    SWEP.IconLetter          = "j"
 end
 
+SWEP.PrintName           = "Faca"
+
 SWEP.Base                   = "weapon_tttbase"
 
 SWEP.UseHands               = true
 SWEP.ViewModel              = "models/weapons/cstrike/c_knife_t.mdl"
 SWEP.WorldModel             = "models/weapons/w_knife_t.mdl"
 
-SWEP.Primary.Damage         = 50
+SWEP.Primary.Damage         = 250
 SWEP.Primary.ClipSize       = -1
 SWEP.Primary.DefaultClip    = -1
 SWEP.Primary.Automatic      = true
@@ -52,21 +54,21 @@ function SWEP:PrimaryAttack()
    self.Weapon:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
    self.Weapon:SetNextSecondaryFire( CurTime() + self.Secondary.Delay )
 
-   if not IsValid(self:GetOwner()) then return end
+   if not IsValid(self.Owner) then return end
 
-   self:GetOwner():LagCompensation(true)
+   self.Owner:LagCompensation(true)
 
-   local spos = self:GetOwner():GetShootPos()
-   local sdest = spos + (self:GetOwner():GetAimVector() * 70)
+   local spos = self.Owner:GetShootPos()
+   local sdest = spos + (self.Owner:GetAimVector() * 70)
 
    local kmins = Vector(1,1,1) * -10
    local kmaxs = Vector(1,1,1) * 10
 
-   local tr = util.TraceHull({start=spos, endpos=sdest, filter=self:GetOwner(), mask=MASK_SHOT_HULL, mins=kmins, maxs=kmaxs})
+   local tr = util.TraceHull({start=spos, endpos=sdest, filter=self.Owner, mask=MASK_SHOT_HULL, mins=kmins, maxs=kmaxs})
 
    -- Hull might hit environment stuff that line does not hit
    if not IsValid(tr.Entity) then
-      tr = util.TraceLine({start=spos, endpos=sdest, filter=self:GetOwner(), mask=MASK_SHOT_HULL})
+      tr = util.TraceLine({start=spos, endpos=sdest, filter=self.Owner, mask=MASK_SHOT_HULL})
    end
 
    local hitEnt = tr.Entity
@@ -89,7 +91,7 @@ function SWEP:PrimaryAttack()
    end
 
    if SERVER then
-      self:GetOwner():SetAnimation( PLAYER_ATTACK1 )
+      self.Owner:SetAnimation( PLAYER_ATTACK1 )
    end
 
 
@@ -104,18 +106,18 @@ function SWEP:PrimaryAttack()
          else
             local dmg = DamageInfo()
             dmg:SetDamage(self.Primary.Damage)
-            dmg:SetAttacker(self:GetOwner())
+            dmg:SetAttacker(self.Owner)
             dmg:SetInflictor(self.Weapon or self)
-            dmg:SetDamageForce(self:GetOwner():GetAimVector() * 5)
-            dmg:SetDamagePosition(self:GetOwner():GetPos())
+            dmg:SetDamageForce(self.Owner:GetAimVector() * 5)
+            dmg:SetDamagePosition(self.Owner:GetPos())
             dmg:SetDamageType(DMG_SLASH)
 
-            hitEnt:DispatchTraceAttack(dmg, spos + (self:GetOwner():GetAimVector() * 3), sdest)
+            hitEnt:DispatchTraceAttack(dmg, spos + (self.Owner:GetAimVector() * 3), sdest)
          end
       end
    end
 
-   self:GetOwner():LagCompensation(false)
+   self.Owner:LagCompensation(false)
 end
 
 function SWEP:StabKill(tr, spos, sdest)
@@ -123,10 +125,10 @@ function SWEP:StabKill(tr, spos, sdest)
 
    local dmg = DamageInfo()
    dmg:SetDamage(2000)
-   dmg:SetAttacker(self:GetOwner())
+   dmg:SetAttacker(self.Owner)
    dmg:SetInflictor(self.Weapon or self)
-   dmg:SetDamageForce(self:GetOwner():GetAimVector())
-   dmg:SetDamagePosition(self:GetOwner():GetPos())
+   dmg:SetDamageForce(self.Owner:GetAimVector())
+   dmg:SetDamagePosition(self.Owner:GetPos())
    dmg:SetDamageType(DMG_SLASH)
 
    -- now that we use a hull trace, our hitpos is guaranteed to be
@@ -134,12 +136,12 @@ function SWEP:StabKill(tr, spos, sdest)
    -- hope our effect_fn trace has more luck
 
    -- first a straight up line trace to see if we aimed nicely
-   local retr = util.TraceLine({start=spos, endpos=sdest, filter=self:GetOwner(), mask=MASK_SHOT_HULL})
+   local retr = util.TraceLine({start=spos, endpos=sdest, filter=self.Owner, mask=MASK_SHOT_HULL})
 
    -- if that fails, just trace to worldcenter so we have SOMETHING
    if retr.Entity != target then
       local center = target:LocalToWorld(target:OBBCenter())
-      retr = util.TraceLine({start=spos, endpos=center, filter=self:GetOwner(), mask=MASK_SHOT_HULL})
+      retr = util.TraceLine({start=spos, endpos=center, filter=self.Owner, mask=MASK_SHOT_HULL})
    end
 
 
@@ -152,7 +154,7 @@ function SWEP:StabKill(tr, spos, sdest)
    pos = pos - (ang:Forward() * 7)
 
    local prints = self.fingerprints
-   local ignore = self:GetOwner()
+   local ignore = self.Owner
 
    target.effect_fn = function(rag)
                          -- we might find a better location
@@ -189,7 +191,7 @@ function SWEP:StabKill(tr, spos, sdest)
 
 
    -- seems the spos and sdest are purely for effects/forces?
-   target:DispatchTraceAttack(dmg, spos + (self:GetOwner():GetAimVector() * 3), sdest)
+   target:DispatchTraceAttack(dmg, spos + (self.Owner:GetAimVector() * 3), sdest)
 
    -- target appears to die right there, so we could theoretically get to
    -- the ragdoll in here...
@@ -205,7 +207,7 @@ function SWEP:SecondaryAttack()
    self.Weapon:SendWeaponAnim( ACT_VM_MISSCENTER )
 
    if SERVER then
-      local ply = self:GetOwner()
+      local ply = self.Owner
       if not IsValid(ply) then return end
 
       ply:SetAnimation( PLAYER_ATTACK1 )
@@ -266,7 +268,7 @@ function SWEP:PreDrop()
 end
 
 function SWEP:OnRemove()
-   if CLIENT and IsValid(self:GetOwner()) and self:GetOwner() == LocalPlayer() and self:GetOwner():Alive() then
+   if CLIENT and IsValid(self.Owner) and self.Owner == LocalPlayer() and self.Owner:Alive() then
       RunConsoleCommand("lastinv")
    end
 end
@@ -298,5 +300,4 @@ if CLIENT then
       return self.BaseClass.DrawHUD(self)
    end
 end
-
 

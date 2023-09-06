@@ -3,7 +3,7 @@ AddCSLuaFile()
 SWEP.HoldType              = "ar2"
 
 if CLIENT then
-   SWEP.PrintName          = "rifle_name"
+   
    SWEP.Slot               = 2
 
    SWEP.ViewModelFlip      = false
@@ -13,12 +13,14 @@ if CLIENT then
    SWEP.IconLetter         = "n"
 end
 
+SWEP.PrintName             = "Steyr Scout"
+
 SWEP.Base                  = "weapon_tttbase"
 
 SWEP.Kind                  = WEAPON_HEAVY
 SWEP.WeaponID              = AMMO_RIFLE
 
-SWEP.Primary.Delay         = 1.5
+SWEP.Primary.Delay         = 1.1
 SWEP.Primary.Recoil        = 7
 SWEP.Primary.Automatic     = true
 SWEP.Primary.Ammo          = "357"

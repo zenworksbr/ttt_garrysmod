@@ -4,7 +4,7 @@ SWEP.HoldType               = "normal"
 
 if CLIENT then
    SWEP.PrintName           = "vis_name"
-   SWEP.Slot                = 6
+   SWEP.Slot                = 3
 
    SWEP.ViewModelFOV        = 10
    SWEP.ViewModelFlip       = false
@@ -35,7 +35,7 @@ SWEP.Secondary.Automatic    = true
 SWEP.Secondary.Ammo         = "none"
 SWEP.Secondary.Delay        = 0.2
 
-SWEP.Kind                   = WEAPON_EQUIP
+SWEP.Kind                   = WEAPON_NADE
 SWEP.CanBuy                 = {ROLE_DETECTIVE} -- only detectives can buy
 SWEP.WeaponID               = AMMO_CSE
 
@@ -129,5 +129,3 @@ if CLIENT then
       return self.BaseClass.Initialize(self)
    end
 end
-
-

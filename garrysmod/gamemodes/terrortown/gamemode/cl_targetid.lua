@@ -9,6 +9,12 @@ local GetRaw = LANG.GetRawTranslation
 local key_params = {usekey = Key("+use", "USE"), walkkey = Key("+walk", "WALK")}
 
 local ClassHint = {
+   burned_ragdoll = {
+      name= "corpse_burned",
+      hint= "burned_corpse",
+
+      fmt = function(ent, txt) return GetPTranslation(txt, key_params) end
+   },
    prop_ragdoll = {
       name= "corpse",
       hint= "corpse_hint",
@@ -31,8 +37,9 @@ end
 
 ---- "T" indicator above traitors
 
-local indicator_mat = Material("vgui/ttt/sprite_traitor")
-local indicator_col = Color(255, 255, 255, 130)
+local t_indicator_mat = Material("vgui/ttt/sprite_traitor")
+local d_indicator_mat = Material("vgui/ttt/sprite_detective")
+local indicator_col = Color(255, 255, 255, 255)
 
 local client, plys, ply, pos, dir, tgt
 local GetPlayers = player.GetAll
@@ -49,17 +56,34 @@ function GM:PostDrawTranslucentRenderables()
 
       dir = client:GetForward() * -1
 
-      render.SetMaterial(indicator_mat)
+      render.SetMaterial(t_indicator_mat)
 
       for i=1, #plys do
          ply = plys[i]
          if ply:IsActiveTraitor() and ply != client then
             pos = ply:GetPos()
-            pos.z = pos.z + 74
+            pos.z = pos.z + 77
 
             render.DrawQuadEasy(pos, dir, 8, 8, indicator_col, 180)
          end
       end
+
+   elseif client:GetDetective() then
+      
+      dir = client:GetForward() * -1
+
+      render.SetMaterial(d_indicator_mat)
+
+      for i=1, #plys do
+         ply = plys[i]
+         if ply:IsActiveDetective() and ply != client then
+            pos = ply:GetPos()
+            pos.z = pos.z + 77
+
+            render.DrawQuadEasy(pos, dir, 8, 8, indicator_col, 180)
+         end
+      end
+
    end
 
    if client:Team() == TEAM_SPEC then
@@ -186,6 +210,10 @@ function GM:HUDDrawTargetID()
    end
 
    local cls = ent:GetClass()
+   if cls == "prop_ragdoll" and ent:GetNWBool("was_burned") then
+      cls = "burned_ragdoll"
+   end
+
    local minimal = minimalist:GetBool()
    local hint = (not minimal) and (ent.TargetIDHint or ClassHint[cls])
 
@@ -218,13 +246,25 @@ function GM:HUDDrawTargetID()
 
       target_detective = GetRoundState() > ROUND_PREP and ent:IsDetective() or false
 
-   elseif cls == "prop_ragdoll" then
+
+   elseif cls == "burned_ragdoll" then
       -- only show this if the ragdoll has a nick, else it could be a mattress
       if CORPSE.GetPlayerNick(ent, false) == false then return end
 
       target_corpse = true
+      if CORPSE.GetFound(ent, false) and client:IsActiveDetective() then
+         text = CORPSE.GetPlayerNick(ent, "A Terrorist")
+      else
+         text  = L.target_burned
+         color = COLOR_RED
+      end
+   elseif cls == "prop_ragdoll" and !ent.was_burned then
+      -- only show this if the ragdoll has a nick, else it could be a mattress
+      if CORPSE.GetPlayerNick(ent, false) == false then return end
+      
+      target_corpse = true
 
-      if CORPSE.GetFound(ent, false) or not DetectiveMode() then
+      if CORPSE.GetFound(ent, false) then
          text = CORPSE.GetPlayerNick(ent, "A Terrorist")
       else
          text  = L.target_unid

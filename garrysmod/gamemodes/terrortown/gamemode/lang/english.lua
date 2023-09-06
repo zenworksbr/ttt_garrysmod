@@ -55,6 +55,8 @@ L.body_call        = "{player} called a Detective to the body of {victim}!"
 L.body_call_error  = "You must confirm the death of this player before calling a Detective!"
 
 L.body_burning     = "Ouch! This corpse is on fire!"
+L.burned_corpse      = "This body has been burned! Thus we can't figure out any information about it."
+L.body_burned_headshot = "This body has been burned! But, at least we know it died because of a headshot!"
 L.body_credits     = "You found {num} credit(s) on the body!"
 
 --- Menus and windows
@@ -161,6 +163,7 @@ L.quick_check   = "Anyone still alive?"
 L.quick_nobody    = "nobody"
 L.quick_disg      = "someone in disguise"
 L.quick_corpse    = "an unidentified body"
+L.quick_burned    = "an burned body"
 L.quick_corpse_id = "{player}'s corpse"
 
 
@@ -580,10 +583,13 @@ L.karma_min    = "Liability"
 
 -- TargetID misc
 L.corpse       = "Corpse"
+L.corpse_burned = "Burned Corpse"
 L.corpse_hint  = "Press {usekey} to search. {walkkey} + {usekey} to search covertly."
+L.burned_hint = "This body has been burned. Only Detectives can identify it."
 
 L.target_disg  = " (DISGUISED)"
 L.target_unid  = "Unidentified body"
+L.target_burned = "Burned body"
 
 L.target_traitor = "FELLOW TRAITOR"
 L.target_detective = "DETECTIVE"
@@ -593,7 +599,7 @@ L.target_credits = "Search to receive unspent credits"
 -- Traitor buttons (HUD buttons with hand icons that only traitors can see)
 L.tbut_single  = "Single use"
 L.tbut_reuse   = "Reusable"
-L.tbut_retime  = "Reusable after {num} seconds"
+L.tbut_retime  = "Reusable after {num} sec"
 L.tbut_help    = "Press {key} to activate"
 
 -- Equipment info lines (on the left above the health/ammo panel)
@@ -612,7 +618,7 @@ L.punch_help   = "Move keys or jump: punch object. Crouch: leave object."
 L.punch_bonus  = "Your bad score lowered your punch-o-meter limit by {num}"
 L.punch_malus  = "Your good score increased your punch-o-meter limit by {num}!"
 
-L.spec_help    = "Click to spectate players, or press {usekey} on a physics object to possess it."
+L.spec_help    = "Click to spectate players, or press {reloadkey} to spectate in firstperson."
 
 --- Info popups shown when the round starts
 
@@ -706,7 +712,7 @@ L.tip19 = "As Detective, if you have leftover credits you could give a trusted I
 
 L.tip20 = "The Detectives' Binoculars allow long-range searching and identifying of corpses. Bad news if the Traitors were hoping to use a corpse as bait. Of course, while using the Binoculars a Detective is unarmed and distracted..."
 
-L.tip21 = "The Detectives' Health Station lets wounded players recover. Of course, those wounded people could be Traitors..."
+L.tip21 =  "The Detectives' Health Station lets wounded players recover. Of course, those wounded people could be Traitors..."
 
 L.tip22 = "The Health Station records a DNA sample of everyone who uses it. Detectives can use this with the DNA Scanner to find out who has been healing up."
 
@@ -745,6 +751,7 @@ L.tip38 = "Many of the placeable equipment items (such as C4, Radio) can be stuc
 L.tip39 = "C4 that explodes due to a mistake in disarming it has a smaller explosion than C4 that reaches zero on its timer."
 
 L.tip40 = "If it says 'HASTE MODE' above the round timer, the round will at first be only a few minutes long, but with every death the available time increases (like capturing a point in TF2). This mode puts the pressure on the traitors to keep things moving."
+
 
 --- Round report
 
@@ -1040,7 +1047,7 @@ L.aw_tod2_text  = "died right after the start of the round."
 
 
 --- New and modified pieces of text are placed below this point, marked with the
---- version or the date in which they were added, to make updating translations easier.
+--- version in which they were added, to make updating translations easier.
 
 
 --- v23
@@ -1054,10 +1061,10 @@ L.drop_no_ammo = "Insufficient ammo in your weapon's clip to drop as an ammo box
 L.set_cross_brightness = "Crosshair brightness"
 L.set_cross_size = "Crosshair size"
 
---- 2015-05-25
+--- 5-25-15
 L.hat_retrieve = "You picked up a Detective's hat."
 
---- 2017-03-09
+--- 3-9-2017
 L.sb_sortby = "Sort By:"
 
 --- 2018-07-24
@@ -1082,8 +1089,8 @@ L.binoc_body = "BODY DETECTED"
 
 L.idle_popup_title = "Idle"
 
---- 2021-06-07
+--- 2021-09-22
 L.sb_playervolume = "Player Volume"
 
 --- 2021-09-22
-L.tip41 = "You can adjust a player's microphone volume by right-clicking their mute icon in the scoreboard."
+L.tip41 = "You can adjust a player's volume by left clicking on their mute icon in the scoreboard."

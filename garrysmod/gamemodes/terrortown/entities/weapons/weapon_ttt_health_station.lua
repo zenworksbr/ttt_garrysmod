@@ -4,7 +4,7 @@ SWEP.HoldType               = "normal"
 
 if CLIENT then
    SWEP.PrintName           = "hstation_name"
-   SWEP.Slot                = 6
+   SWEP.Slot                = 3
 
    SWEP.ViewModelFOV        = 10
    SWEP.DrawCrosshair       = false
@@ -18,6 +18,7 @@ if CLIENT then
 end
 
 SWEP.Base                   = "weapon_tttbase"
+SWEP.Kind                   = WEAPON_NADE
 
 SWEP.ViewModel              = "models/weapons/v_crowbar.mdl"
 SWEP.WorldModel             = "models/props/cs_office/microwave.mdl"
@@ -35,7 +36,6 @@ SWEP.Secondary.Ammo         = "none"
 SWEP.Secondary.Delay        = 1.0
 
 -- This is special equipment
-SWEP.Kind                   = WEAPON_EQUIP
 SWEP.CanBuy                 = {ROLE_DETECTIVE} -- only detectives can buy
 SWEP.LimitedStock           = true -- only buyable once
 SWEP.WeaponID               = AMMO_HEALTHSTATION
@@ -43,25 +43,27 @@ SWEP.WeaponID               = AMMO_HEALTHSTATION
 SWEP.AllowDrop              = false
 SWEP.NoSights               = true
 
-function SWEP:OnDrop()
-   self:Remove()
-end
+--[[function SWEP:OnDrop()
+   self:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
+   self:HealthDrop()
+end]]
 
 function SWEP:PrimaryAttack()
    self:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
    self:HealthDrop()
 end
-function SWEP:SecondaryAttack()
+
+--[[function SWEP:SecondaryAttack()
    self:SetNextSecondaryFire( CurTime() + self.Secondary.Delay )
    self:HealthDrop()
-end
+end]]
 
 local throwsound = Sound( "Weapon_SLAM.SatchelThrow" )
 
 -- ye olde droppe code
 function SWEP:HealthDrop()
    if SERVER then
-      local ply = self:GetOwner()
+      local ply = self.Owner
       if not IsValid(ply) then return end
 
       if self.Planted then return end
@@ -99,7 +101,7 @@ function SWEP:Reload()
 end
 
 function SWEP:OnRemove()
-   if CLIENT and IsValid(self:GetOwner()) and self:GetOwner() == LocalPlayer() and self:GetOwner():Alive() then
+   if CLIENT and IsValid(self.Owner) and self.Owner == LocalPlayer() and self.Owner:Alive() then
       RunConsoleCommand("lastinv")
    end
 end
@@ -113,8 +115,8 @@ if CLIENT then
 end
 
 function SWEP:Deploy()
-   if SERVER and IsValid(self:GetOwner()) then
-      self:GetOwner():DrawViewModel(false)
+   if SERVER and IsValid(self.Owner) then
+      self.Owner:DrawViewModel(false)
    end
    return true
 end
@@ -125,3 +127,4 @@ end
 function SWEP:DrawWorldModelTranslucent()
 end
 
+SWEP.SecondaryAttack = SWEP.PrimaryAttack

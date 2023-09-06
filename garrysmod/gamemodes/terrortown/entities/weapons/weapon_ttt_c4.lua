@@ -1,12 +1,38 @@
-
 -- traitor equipment: c4 bomb
 
 AddCSLuaFile()
 
 SWEP.HoldType               = "slam"
 
+-- local isMapBlackListed = function(arr, val)
+--    for index, value in ipairs(arr) do
+--       if val == value then
+--          return true
+--       end
+--    end
+
+--    return false
+-- end
+
+-- local canBuy = function()
+-- local map = game.GetMap()
+-- local blacklisted_maps = {
+--    'ttt_skyscraper_2015_v1p_f4',
+--    'ttt_clue_se',
+--    'ttt_fastfood_a6',
+--    'ttt_subway_b4'
+-- }
+-- print('O mapa ' .. map .. ' não terá C4? ' .. isMapBlackListed(blacklisted_maps, map))
+
+-- if isMapBlackListed(blacklisted_maps, map) then
+--    return ''
+-- end
+
+--    return '{ROLE_TRAITOR}'
+-- end
+
 if CLIENT then
-   SWEP.PrintName           = "C4"
+
    SWEP.Slot                = 6
    
    SWEP.ViewModelFlip      = false
@@ -22,6 +48,8 @@ if CLIENT then
    SWEP.Icon                = "vgui/ttt/icon_c4"
    SWEP.IconLetter          = "I"
 end
+
+SWEP.PrintName           = "C4"
 
 SWEP.Base                   = "weapon_tttbase"
 

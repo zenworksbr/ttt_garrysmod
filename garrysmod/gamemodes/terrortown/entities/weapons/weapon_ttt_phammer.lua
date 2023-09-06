@@ -5,8 +5,8 @@ DEFINE_BASECLASS "weapon_tttbase"
 SWEP.HoldType              = "ar2"
 
 if CLIENT then
-   SWEP.PrintName          = "polter_name"
-   SWEP.Slot               = 7
+   
+   SWEP.Slot               = 8
 
    SWEP.ViewModelFlip      = false
    SWEP.ViewModelFOV       = 54
@@ -18,6 +18,8 @@ if CLIENT then
 
    SWEP.Icon               = "vgui/ttt/icon_polter"
 end
+
+SWEP.PrintName          = "Poltergeist"
 
 SWEP.Base                  = "weapon_tttbase"
 
@@ -33,7 +35,7 @@ SWEP.Primary.Sound         = Sound( "weapons/airboat/airboat_gun_energy1.wav" )
 
 SWEP.Secondary.Automatic   = false
 
-SWEP.Kind                  = WEAPON_EQUIP2
+SWEP.Kind                  = WEAPON_ROLE
 SWEP.CanBuy                = {ROLE_TRAITOR} -- only traitors can buy
 SWEP.WeaponID              = AMMO_POLTER
 
@@ -45,9 +47,10 @@ SWEP.NoSights              = true
 
 SWEP.IsCharging            = false
 SWEP.NextCharge            = 0
-SWEP.MaxRange              = 800
 
 AccessorFuncDT(SWEP, "charge", "Charge")
+
+local maxrange = 1200
 
 local math = math
 
@@ -116,7 +119,7 @@ function SWEP:PrimaryAttack()
       local ply = self:GetOwner()
       if not IsValid(ply) then return end
 
-      local tr = util.TraceLine({start=ply:GetShootPos(), endpos=ply:GetShootPos() + ply:GetAimVector() * self.MaxRange, filter={ply, self.Entity}, mask=MASK_SOLID})
+      local tr = util.TraceLine({start=ply:GetShootPos(), endpos=ply:GetShootPos() + ply:GetAimVector() * maxrange, filter={ply, self.Entity}, mask=MASK_SOLID})
 
       if tr.HitNonWorld and ValidTarget(tr.Entity) and tr.Entity:GetPhysicsObject():IsMoveable() then
 
@@ -150,7 +153,7 @@ function SWEP:SecondaryAttack()
 
          if self.IsCharging and self:GetCharge() >= 1 then
             return
-         elseif tr.Fraction * range > self.MaxRange then
+         elseif tr.Fraction * range > maxrange then
             self.IsCharging = true
          end
       end
@@ -225,7 +228,7 @@ if SERVER then
                return true
             elseif self.NextCharge < CurTime() then
                local d = tr.Entity:GetPos():Distance(self:GetOwner():GetPos())
-               local f = math.max(1, math.floor(d / self.MaxRange))
+               local f = math.max(1, math.floor(d / maxrange))
 
                self:SetCharge(math.min(1, self:GetCharge() + (CHARGE_AMOUNT / f)))
 
@@ -279,7 +282,7 @@ if CLIENT then
 
       local muzzle_angpos = vm:GetAttachment(1)
       local spos = muzzle_angpos.Pos + muzzle_angpos.Ang:Forward() * 10
-      local epos = client:GetShootPos() + client:GetAimVector() * self.MaxRange
+      local epos = client:GetShootPos() + client:GetAimVector() * maxrange
 
       -- Painting beam
       local tr = util.TraceLine({start=spos, endpos=epos, filter=client, mask=MASK_ALL})
@@ -289,7 +292,7 @@ if CLIENT then
       local d = (plytr.StartPos - plytr.HitPos):Length()
       if plytr.HitNonWorld then
          if ValidTarget(plytr.Entity) then
-            if d < self.MaxRange then
+            if d < maxrange then
                c = COLOR_GREEN
                a = 255
             else

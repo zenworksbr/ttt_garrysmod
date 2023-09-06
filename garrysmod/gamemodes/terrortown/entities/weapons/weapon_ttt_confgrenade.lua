@@ -4,7 +4,7 @@ AddCSLuaFile()
 SWEP.HoldType           = "grenade"
 
 if CLIENT then
-   SWEP.PrintName       = "confgrenade_name"
+
    SWEP.Slot            = 3
 
    SWEP.ViewModelFlip   = false
@@ -13,6 +13,8 @@ if CLIENT then
    SWEP.Icon            = "vgui/ttt/icon_nades"
    SWEP.IconLetter      = "h"
 end
+
+SWEP.PrintName       = "Discombulator"
 
 SWEP.Base               = "weapon_tttbasegrenade"
 

@@ -1,4 +1,3 @@
-
 AddCSLuaFile()
 
 ENT.Type = "anim"
@@ -8,9 +7,12 @@ ENT.Model = Model("models/weapons/w_eq_fraggrenade_thrown.mdl")
 local ttt_allow_jump = CreateConVar("ttt_allow_discomb_jump", "0")
 
 local function PushPullRadius(pos, pusher)
-   local radius = 400
-   local phys_force = 1500
-   local push_force = 256
+
+-- remover o efeito de puxar itens mas lançar jogadores longe
+-- faz com que tudo seja jogado para longe
+local radius = 300 -- 300
+local phys_force = -1000 -- -1000
+local push_force = 600 -- 600
 
    -- pull physics objects and push players
    for k, target in ipairs(ents.FindInSphere(pos, radius)) do
@@ -47,7 +49,11 @@ local function PushPullRadius(pos, pusher)
       end
    end
 
-   local phexp = ents.Create("env_physexplosion")
+   -- efeito mais interessante para a explosão da discomb
+   -- pode, rarissimamente, causar a morte de um jogador que esteja
+   -- exatamente em cima da granada no momento da explosão
+   -- mesmo assim, me recuso a trazer o efeito antigo de volta
+   local phexp = ents.Create("prop_combine_ball")
    if IsValid(phexp) then
       phexp:SetPos(pos)
       phexp:SetKeyValue("magnitude", 100) --max
@@ -55,11 +61,12 @@ local function PushPullRadius(pos, pusher)
       -- 1 = no dmg, 2 = push ply, 4 = push radial, 8 = los, 16 = viewpunch
       phexp:SetKeyValue("spawnflags", 1 + 2 + 16)
       phexp:Spawn()
-      phexp:Fire("Explode", "", 0.2)
+      phexp:Fire("Explode", "", 0.01)
    end
 end
 
-local zapsound = Sound("npc/assassin/ball_zap1.wav")
+-- efeito sonoro padrão
+--local zapsound = Sound("npc/assassin/ball_zap1.wav")
 function ENT:Explode(tr)
    if SERVER then
       self:SetNoDraw(true)
@@ -85,10 +92,10 @@ function ENT:Explode(tr)
          effect:SetNormal(tr.HitNormal)
       end
       
-      util.Effect("Explosion", effect, true, true)
+      util.Effect("HelicopterMegaBomb", effect, true, true)
       util.Effect("cball_explode", effect, true, true)
 
-      sound.Play(zapsound, pos, 100, 100)
+      --sound.Play(zapsound, pos, 100, 100)
    else
       local spos = self:GetPos()
       local trs = util.TraceLine({start=spos + Vector(0,0,64), endpos=spos + Vector(0,0,-128), filter=self})

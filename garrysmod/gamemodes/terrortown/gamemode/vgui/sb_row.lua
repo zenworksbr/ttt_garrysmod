@@ -1,4 +1,5 @@
 ---- Scoreboard player score row, based on sandbox version
+-- ARQUIVO COM DIVERSAS MODIFICAÇÕES
 
 include("sb_info.lua")
 
@@ -6,6 +7,11 @@ include("sb_info.lua")
 local GetTranslation = LANG.GetTranslation
 local GetPTranslation = LANG.GetParamTranslation
 
+-- parâmetros para utilização do slider de volume de voz de jogadores
+local sliderOpen = false
+
+-- lista de jogadores com chat de texto silenciado
+local mutedPlayers = {}
 
 SB_ROW_HEIGHT = 24 --16
 
@@ -86,9 +92,10 @@ local rolecolor = {
 function GM:TTTScoreboardColorForPlayer(ply)
    if not IsValid(ply) then return namecolor.default end
 
-   if ply:SteamID() == "STEAM_0:0:1963640" then
-      return namecolor.dev
-   elseif ply:IsAdmin() and GetGlobalBool("ttt_highlight_admins", true) then
+   -- sim, isto está HORRÍVEL. Eu sei.
+   if COLORED_NAME_USERGROUPS[ply:SteamID()] != nil then
+      return COLORED_NAME_USERGROUPS[ply:SteamID()]
+   elseif ply:IsAdmin() or SB_BASE_PERMS[ply:GetUserGroup()] or SB_MOD_PERMS[ply:GetUserGroup()] or SB_FULL_PERMS[ply:GetUserGroup()] and GetGlobalBool("ttt_highlight_admins", true) then
       return namecolor.admin
    end
    return namecolor.default
@@ -143,6 +150,7 @@ function PANEL:Paint(width, height)
    return true
 end
 
+
 function PANEL:SetPlayer(ply)
    self.Player = ply
    self.avatar:SetPlayer(ply)
@@ -166,14 +174,9 @@ function PANEL:SetPlayer(ply)
    end
 
    self.voice.DoClick = function()
-                           if IsValid(ply) and ply != LocalPlayer() then
-                              ply:SetMuted(not ply:IsMuted())
-                           end
-                        end
-
-   self.voice.DoRightClick = function()
-      if IsValid(ply) and ply != LocalPlayer() then
+      if IsValid(ply) and ply != LocalPlayer() and !sliderOpen then
          self:ShowMicVolumeSlider()
+         sliderOpen = true
       end
    end
 
@@ -219,7 +222,7 @@ function PANEL:UpdatePlayerData()
    end
 
    if self.Player != LocalPlayer() then
-      local muted = self.Player:IsMuted()
+      local muted = self.Player:IsMuted() 
       self.voice:SetImage(muted and "icon16/sound_mute.png" or "icon16/sound.png")
    else
       self.voice:Hide()
@@ -313,11 +316,266 @@ end
 function PANEL:DoRightClick()
    local menu = DermaMenu()
    menu.Player = self:GetPlayer()
-
    local close = hook.Call( "TTTScoreboardMenu", nil, menu )
+   
    if close then menu:Remove() return end
-
    menu:Open()
+   
+   -- menu de interação com comandos diretos
+   -- para serem utilizados por staffs
+   local menu = DermaMenu()   
+   menu.Player = self:GetPlayer()   
+   local close = hook.Call( "TTTScoreboardMenu", nil, menu )   
+   
+   if close then menu:Remove() return end   
+   menu:Open()   	
+   local ply = self.Player
+   
+   surface.PlaySound("buttons/button9.wav")			
+   local options = DermaMenu()
+   options:AddOption("Cargo: " .. ply:GetUserGroup(), function() -- sb_roles[ply:GetUserGroup()].name -- atlaschat.ranks[ply:GetUserGroup()].tag
+      if !LocalPlayer() then return end
+      SetClipboardText(ply:GetUserGroup())
+      chat.AddText(Color(151, 211, 255), "Cargo '", Color(0, 255, 0), ply:GetUserGroup(), Color(151, 211, 255), "', de ", Color(0, 255, 0), ply:Nick(), Color(151, 211, 255), " copiado com sucesso!")
+      surface.PlaySound("buttons/button9.wav") 
+   end):SetImage(atlaschat.ranks[ply:GetUserGroup()].icon) -- atlaschat.ranks[ply:GetUserGroup()].icon) -- sb_roles[ply:GetUserGroup()].icon)
+   options:AddSpacer()
+   options:AddOption("Copiar Nome", function() 
+      if !LocalPlayer() then return end
+      SetClipboardText(ply:Nick())
+      chat.AddText("'", Color(0, 255, 0), ply:Nick(), Color(151, 211, 255), "' copiado com sucesso!")
+      surface.PlaySound("buttons/button9.wav") 
+   end):SetImage("icon16/user_edit.png")			
+   options:AddOption("Copiar SteamID", function() 
+      if !LocalPlayer() then return end
+      SetClipboardText(ply:SteamID())
+      chat.AddText("'", Color(0, 255, 0), ply:SteamID(), Color(151, 211, 255), "', de ", Color(0, 255, 0), ply:Nick(), Color(151, 211, 255), " copiado com sucesso!")
+      surface.PlaySound("buttons/button9.wav") 
+   end):SetImage("icon16/tag_blue.png")			
+   options:AddSpacer()
+   
+   options:AddOption("Abrir Perfil Steam", function() 
+   ply:ShowProfile() surface.PlaySound("buttons/button9.wav") 
+   end):SetImage("icon16/world.png")			
+   options:AddSpacer()
+   options:Open()
+   
+   if (SB_VIP_PERMS[LocalPlayer():GetUserGroup()] and LocalPlayer() == ply) or SB_MOD_PERMS[LocalPlayer():GetUserGroup()] then
+      local superop,supimg = options:AddSubMenu("Cargos")					
+      supimg:SetImage("icon16/group_edit.png")
+   
+      superop:AddOption("Remover rank", function()
+         RunConsoleCommand("ulx","removerank",ply:Nick())
+         surface.PlaySound("buttons/button9.wav")
+      end):SetImage("icon16/html_delete.png")
+
+      if (SB_FULL_PERMS[LocalPlayer():GetUserGroup()]) then
+
+         superop:AddSpacer()
+         superop:AddOption("Dar Temp. Helper", function()
+            RunConsoleCommand("ulx","adduser",ply:Nick(),"temp_helper")
+            surface.PlaySound("buttons/button9.wav")
+         end):SetImage(atlaschat.ranks["temp_helper"].icon)
+
+         superop:AddOption("Dar cargo Ajudante", function()
+            RunConsoleCommand("ulx","adduser",ply:Nick(),"helper")
+            surface.PlaySound("buttons/button9.wav")
+         end):SetImage(atlaschat.ranks["helper"].icon)
+
+         superop:AddOption("Dar cargo Doador", function()
+            RunConsoleCommand("ulx","adduser",ply:Nick(),"donator")
+            surface.PlaySound("buttons/button9.wav")
+         end):SetImage(atlaschat.ranks["donator"].icon)
+
+         superop:AddOption("Dar cargo Moderador", function()
+            RunConsoleCommand("ulx","adduser",ply:Nick(),"operator")
+            surface.PlaySound("buttons/button9.wav")
+         end):SetImage(atlaschat.ranks["operator"].icon)
+
+         superop:AddOption("Dar cargo Mod Doador", function()
+            RunConsoleCommand("ulx","adduser",ply:Nick(),"operator_donator")
+            surface.PlaySound("buttons/button9.wav")
+         end):SetImage(atlaschat.ranks["operator_donator"].icon)
+
+         superop:AddOption("Dar cargo Adminstrador", function()
+            RunConsoleCommand("ulx","adduser",ply:Nick(),"admin")
+            surface.PlaySound("buttons/button9.wav")
+         end):SetImage(atlaschat.ranks["admin"].icon)
+
+         superop:AddOption("Dar cargo Admin Doador", function()
+            RunConsoleCommand("ulx","adduser",ply:Nick(),"admin_donator")
+            surface.PlaySound("buttons/button9.wav")
+         end):SetImage(atlaschat.ranks["admin_donator"].icon)
+
+         superop:AddOption("Dar cargo Admin Chefe", function()
+            RunConsoleCommand("ulx","adduser",ply:Nick(),"superadmin")
+            surface.PlaySound("buttons/button9.wav")
+         end):SetImage(atlaschat.ranks["superadmin"].icon)
+
+         superop:AddSpacer()
+         superop:AddOption("Remover cargo", function()
+            RunConsoleCommand("ulx","removeuser",ply:Nick())
+            surface.PlaySound("buttons/button9.wav")
+         end):SetImage("icon16/group_delete.png")
+
+      end
+
+      superop:AddSpacer()
+
+   end
+
+   if SB_BASE_PERMS[LocalPlayer():GetUserGroup()] then
+      
+      local adminop,subimg = options:AddSubMenu("Administrar")					
+      subimg:SetImage("icon16/lorry.png")
+      
+      adminop:AddOption("Slay agora", function() 
+         RunConsoleCommand("ulx","slay",ply:Nick()) 
+         surface.PlaySound("buttons/button9.wav") 
+      end):SetImage("icon16/cut_red.png") 
+
+      if SB_MOD_PERMS[LocalPlayer():GetUserGroup()] then
+
+         adminop:AddOption("Reviver", function() 
+            RunConsoleCommand("ulx","respawn",ply:Nick()) 
+            surface.PlaySound("buttons/button9.wav") 
+         end):SetImage("icon16/rainbow.png")
+
+      end
+
+      adminop:AddSpacer()
+      adminop:AddOption("Teleportar", function() 
+         RunConsoleCommand("ulx","teleport",ply:Nick())
+         surface.PlaySound("buttons/button9.wav") 
+      end):SetImage("icon16/wand.png")	
+
+      adminop:AddOption("Trazer", function() 
+         RunConsoleCommand("ulx","bring",ply:Nick())
+         surface.PlaySound("buttons/button9.wav") 
+      end):SetImage("icon16/wand.png")	
+
+      adminop:AddSpacer()      
+      adminop:AddOption("Expulsar", function() 
+         RunConsoleCommand("ulx","kick",ply:Nick(),"Você foi expulso do servidor")
+         surface.PlaySound("buttons/button9.wav") 
+      end):SetImage("icon16/delete.png")	
+      
+      adminop:AddSpacer()					
+      adminop:AddOption("Mutar", function() 
+         RunConsoleCommand("ulx","mute",ply:Nick()) 
+         surface.PlaySound("buttons/button9.wav") 
+      end):SetImage("icon16/keyboard_delete.png")					
+      
+      adminop:AddOption("Dar gag", function() 
+         RunConsoleCommand("ulx","gag",ply:Nick()) 
+         surface.PlaySound("buttons/button9.wav") 
+      end):SetImage("icon16/sound_mute.png")
+      
+      adminop:AddSpacer()					
+      adminop:AddOption("Tirar mute", function() 
+         RunConsoleCommand("ulx","unmute",ply:Nick()) 
+         surface.PlaySound("buttons/button9.wav") 
+      end):SetImage("icon16/keyboard_add.png")					
+      
+      adminop:AddOption("Tirar gag", function() 
+         RunConsoleCommand("ulx","ungag",ply:Nick()) 
+         surface.PlaySound("buttons/button9.wav") 
+      end):SetImage("icon16/sound.png")
+      
+      if SB_MOD_PERMS[LocalPlayer():GetUserGroup()] then
+
+         local funop, funimg = options:AddSubMenu("Diversão")
+         funimg:SetImage("icon16/bricks.png")
+
+         local tttop, tttimg = options:AddSubMenu("TTT")
+         tttimg:SetImage("icon16/exclamation.png")
+
+         tttop:AddOption("Forçar Espectador", function()
+            RunConsoleCommand("ulx","fspec",ply:Nick()) 
+            surface.PlaySound("buttons/button9.wav") 
+         end):SetImage("icon16/camera.png")	
+
+         tttop:AddOption("Tirar de Espectador", function()
+            RunConsoleCommand("ulx","unspec",ply:Nick()) 
+            surface.PlaySound("buttons/button9.wav") 
+         end):SetImage("icon16/camera_delete.png")	
+
+         tttop:AddSpacer()
+         tttop:AddOption("Desabilitar Detetive", function()
+            RunConsoleCommand("ulx", "undetective", ply:Nick())
+            chat.AddText(Color(151, 211, 255), "Jogador '", Color(0, 255, 0), ply:Nick(), Color(151, 211, 255), "' agora estará com o ", Color(0, 255, 0), "Detetive desativado", Color(151, 211, 255), "!")
+            surface.PlaySound("buttons/button9.wav") 
+         end):SetImage("icon16/award_star_delete.png")
+
+         tttop:AddOption("Habilitar Detetive", function()
+            RunConsoleCommand("ulx", "forcedetective", ply:Nick())
+            chat.AddText(Color(151, 211, 255), "Jogador '", Color(0, 255, 0), ply:Nick(), Color(151, 211, 255), "' agora estará com o ", Color(0, 255, 0), "Detetive desativado", Color(151, 211, 255), "!")
+            surface.PlaySound("buttons/button9.wav") 
+         end):SetImage("icon16/award_star_add.png")
+
+         adminop:AddSpacer()			
+         adminop:AddOption("Assistir", function() 
+            RunConsoleCommand("ulx","spectate",ply:Nick()) 
+            surface.PlaySound("buttons/button9.wav") 
+         end):SetImage("icon16/zoom.png")	
+
+         adminop:AddSpacer()
+
+         funop:AddSpacer()
+         funop:AddOption("Explodir", function()
+            RunConsoleCommand("ulx","explode",ply:Nick())
+            surface.PlaySound("buttons/button9.wav")
+         end):SetImage("icon16/asterisk_orange.png")
+
+         funop:AddOption("Launch", function()
+            RunConsoleCommand("ulx","launch",ply:Nick())
+            surface.PlaySound("buttons/button9.wav")
+         end):SetImage("icon16/sport_football.png")
+
+         if SB_FULL_PERMS[LocalPlayer():GetUserGroup()] then
+
+            funop:AddSpacer()
+            funop:AddOption("Crash", function()
+               RunConsoleCommand("ulx","crash",ply:Nick())
+               surface.PlaySound("buttons/button9.wav")
+            end):SetImage("icon16/cancel.png")
+
+            tttop:AddSpacer()
+            tttop:AddOption("Forçar Traidor Agora", function()
+               RunConsoleCommand("ulx","force",ply:Nick(),"traitor")
+               surface.PlaySound("buttons/button9.wav")
+            end):SetImage("icon16/flag_red.png")
+
+            tttop:AddOption("Forçar Detetive Agora", function()
+               RunConsoleCommand("ulx","force",ply:Nick(),"detective")
+               surface.PlaySound("buttons/button9.wav")
+            end):SetImage("icon16/flag_blue.png")
+
+            tttop:AddOption("Forçar Inocente Agora", function()
+               RunConsoleCommand("ulx","force",ply:Nick(),"innocent")
+               surface.PlaySound("buttons/button9.wav")
+            end):SetImage("icon16/flag_green.png")
+
+            tttop:AddSpacer()
+            tttop:AddOption("Traidor Próxima Rodada", function()
+               RunConsoleCommand("ulx","forcenr",ply:Nick(),"traitor")
+               surface.PlaySound("buttons/button9.wav")  
+            end):SetImage("icon16/flag_red.png")
+
+            tttop:AddOption("Detetive Próxima Rodada", function()
+               RunConsoleCommand("ulx","forcenr",ply:Nick(),"detective")
+               surface.PlaySound("buttons/button9.wav")
+            end):SetImage("icon16/flag_blue.png")
+
+            tttop:AddSpacer()
+
+      	end
+            
+         adminop:AddSpacer()	
+         funop:AddSpacer()			
+         options:Open()
+         end		
+      end
 end
 
 
@@ -335,7 +593,6 @@ function PANEL:ShowMicVolumeSlider()
    local currentPlayerVolume = self:GetPlayer():GetVoiceVolumeScale()
    currentPlayerVolume = currentPlayerVolume != nil and currentPlayerVolume or 1
 
-
    -- Frame for the slider
    local frame = vgui.Create("DFrame")
    frame:SetPos(x, y)
@@ -350,7 +607,12 @@ function PANEL:ShowMicVolumeSlider()
    end
 
    -- Automatically close after 10 seconds (something may have gone wrong)
-   timer.Simple(10, function() if IsValid(frame) then frame:Close() end end)
+   timer.Simple(10, function()
+      if IsValid(frame) then
+         frame:Close()
+         sliderOpen = false
+      end
+   end)
 
 
    -- "Player volume"
@@ -361,6 +623,20 @@ function PANEL:ShowMicVolumeSlider()
    label:SetColor(Color(255, 255, 255, 255))
    label:SetText(LANG.GetTranslation("sb_playervolume"))
 
+   local chat = vgui.Create("DImageButton", frame)
+   chat:SetImage(table.HasValue( mutedPlayers, self:GetPlayer():SteamID() ) and "icon16/comment_delete.png" or "icon16/comment.png")
+
+   chat.DoClick = function ()
+      if table.HasValue( mutedPlayers, self:GetPlayer():SteamID() ) then
+         table.RemoveByValue( mutedPlayers, self:GetPlayer():SteamID() )
+         chat:SetImage("icon16/comment.png")
+      else
+         table.insert(mutedPlayers, self:GetPlayer():SteamID())
+         chat:SetImage("icon16/comment_delete.png")
+      end
+   end
+   chat:Dock(RIGHT)
+   chat:SetSize(16,16)
 
    -- Slider
    local slider = vgui.Create("DSlider", frame)
@@ -370,13 +646,36 @@ function PANEL:ShowMicVolumeSlider()
    slider:SetSlideX(currentPlayerVolume)
    slider:SetLockY(0.5)
    slider.TranslateValues = function(slider, x, y)
-      if IsValid(self:GetPlayer()) then self:GetPlayer():SetVoiceVolumeScale(x) end
+      if IsValid(self:GetPlayer()) then 
+         self:GetPlayer():SetVoiceVolumeScale(x)
+         if (x == 0) then
+            self:GetPlayer():SetMuted(true)
+         else 
+            self:GetPlayer():SetMuted(false)
+         end
+       end
       return x, y
    end
 
    -- Close the slider panel once the player has selected a volume
-   slider.OnMouseReleased = function(panel, mcode) frame:Close() end
-   slider.Knob.OnMouseReleased = function(panel, mcode) frame:Close() end
+   slider.OnMouseReleased = function(panel, mcode) 
+      if (IsValid(frame)) then
+         frame:Close()
+         sliderOpen = false
+      end
+   end
+   slider.Knob.OnMouseReleased = function(panel, mcode) 
+      if (IsValid(frame)) then
+         frame:Close()
+         sliderOpen = false
+      end
+   end
+   hook.Add( "ScoreboardHide", "Scoreboard_CloseVolumePanelForSB", function()
+      if (IsValid(frame)) then
+         frame:Close()
+         sliderOpen = false
+      end
+    end )
 
 
    -- Slider rendering
