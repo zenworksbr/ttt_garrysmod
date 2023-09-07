@@ -540,7 +540,7 @@ function ents.TTT.CanImportEntities(map)
    if not tostring(map) then return false end
    if not GetConVar("ttt_use_weapon_spawn_scripts"):GetBool() then return false end
 
-   local fname = "maps/" .. map .. "_ttt.txt"
+   local fname = "data/ttt/maps/" .. map .. "_ttt.txt"
 
    return file.Exists(fname, "GAME")
 end
@@ -548,7 +548,7 @@ end
 local function ImportSettings(map)
    if not ents.TTT.CanImportEntities(map) then return end
 
-   local fname = "maps/" .. map .. "_ttt.txt"
+   local fname = "data/ttt/maps/" .. map .. "_ttt.txt"
    local buf = file.Read(fname, "GAME")
 
    local settings = {}
@@ -577,7 +577,7 @@ local classremap = {
 local function ImportEntities(map)
    if not ents.TTT.CanImportEntities(map) then return end
 
-   local fname = "maps/" .. map .. "_ttt.txt"
+   local fname = "data/ttt/maps/" .. map .. "_ttt.txt"
 
    local num = 0
    for k, line in ipairs(string.Explode("\n", file.Read(fname, "GAME"))) do
