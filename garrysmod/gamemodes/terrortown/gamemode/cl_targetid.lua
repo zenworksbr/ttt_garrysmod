@@ -71,8 +71,7 @@ function GM:PostDrawTranslucentRenderables()
 
       render.SetMaterial(d_indicator_mat)
 
-      for i=1, #plys do
-         ply = plys[i]
+      for _, ply in player.Iterator() do
          if ply:IsActiveDetective() and ply != client then
             pos = ply:GetPos()
             pos.z = pos.z + 77
