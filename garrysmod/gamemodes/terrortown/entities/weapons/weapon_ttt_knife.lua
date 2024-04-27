@@ -211,7 +211,7 @@ function SWEP:PrimaryAttack()
          -- account we do want to avoid rounding error strangeness caused by
          -- other damage scaling, causing a death when we don't expect one, so
          -- when the target's health is close to kill-point we just kill
-         if isBackstab(self, target) then
+         if isBackstab(self.Weapon, hitEnt) then
             
             local dmg = DamageInfo()
             dmg:SetDamage(self.Primary.Damage * 20)
@@ -402,7 +402,7 @@ if CLIENT then
 
       if tr.HitNonWorld and IsValid(tr.Entity) and tr.Entity:IsPlayer()
          and tr.Entity:Health() < (self.Primary.Damage + 10) 
-         and isBackstab(self, tr.Entity) then
+         and isBackstab(self.Weapon, tr.Entity) then
 
          local x = ScrW() / 2.0
          local y = ScrH() / 2.0
