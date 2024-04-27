@@ -21,8 +21,6 @@ if CLIENT then
    SWEP.Icon               = "vgui/ttt/icon_tport"
 end
 
-SWEP.PrintName             = "Teletransportador"
-
 SWEP.Base                  = "weapon_tttbase"
 
 SWEP.ViewModel             = "models/weapons/v_crowbar.mdl"

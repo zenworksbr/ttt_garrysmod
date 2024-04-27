@@ -6,7 +6,7 @@ if SERVER then
 	AddCSLuaFile()
 	resource.AddWorkshop("253736902")
 else
-
+	SWEP.PrintName = "Galil"
 	SWEP.Slot = 2
 	SWEP.Icon = "vgui/ttt/icon_galil"
 
@@ -16,14 +16,12 @@ else
 	SWEP.ViewModelFOV = 58
 end
 
-SWEP.PrintName = "Galil"
-
 -- always derive from weapon_tttbase
 SWEP.Base = "weapon_tttbase"
 
 --[[Default GMod values]]--
 SWEP.Primary.Ammo = "SMG1"
-SWEP.Primary.Delay = 0.095
+SWEP.Primary.Delay = 0.13
 SWEP.Primary.Recoil = 0.8
 SWEP.Primary.Cone = 0.025
 SWEP.Primary.Damage = 22
@@ -33,7 +31,7 @@ SWEP.Primary.ClipMax = 60
 SWEP.Primary.DefaultClip = 30
 SWEP.Primary.Sound = Sound("Weapon_Galil.Single")
 
-SWEP.HeadshotMultiplier  = 2.3
+SWEP.HeadshotMultiplier  = 1.7
 
 --[[Model settings]]--
 SWEP.HoldType = "ar2"

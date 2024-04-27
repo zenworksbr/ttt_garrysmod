@@ -9,13 +9,11 @@ SWEP.HoldType = "pistol"
    
 
 if CLIENT then
-   
+   SWEP.PrintName = "P228"
    SWEP.Slot = 1
    
    SWEP.Icon = "VGUI/ttt/icon_p228"
 end
-
-SWEP.PrintName = "P228"
 
 SWEP.Kind = WEAPON_PISTOL
 SWEP.WeaponID = AMMO_PISTOL
@@ -23,10 +21,10 @@ SWEP.WeaponID = AMMO_PISTOL
 SWEP.Base = "weapon_tttbase"
 SWEP.Primary.Recoil	= 1.5
 SWEP.Primary.Damage = 10
-SWEP.Primary.Delay = 0.15
+SWEP.Primary.Delay = 0.07
 SWEP.Primary.Cone = 0.02
 SWEP.Primary.ClipSize = 20
-SWEP.Primary.Automatic = true
+SWEP.Primary.Automatic = false
 SWEP.Primary.DefaultClip = 20
 SWEP.Primary.ClipMax = 60
 SWEP.Primary.Ammo = "Pistol"

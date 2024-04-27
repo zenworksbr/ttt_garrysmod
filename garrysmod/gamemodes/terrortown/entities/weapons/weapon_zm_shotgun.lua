@@ -3,7 +3,7 @@ AddCSLuaFile()
 SWEP.HoldType              = "shotgun"
 
 if CLIENT then
-   
+   SWEP.PrintName          = "XM1014"
    SWEP.Slot               = 2
 
    SWEP.ViewModelFlip      = false
@@ -13,7 +13,6 @@ if CLIENT then
    SWEP.IconLetter         = "B"
 end
 
-SWEP.PrintName          = "XM1014"
 
 SWEP.Base                  = "weapon_tttbase"
 

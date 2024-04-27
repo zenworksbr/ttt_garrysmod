@@ -7,15 +7,13 @@ if SERVER then
 end
 
 if CLIENT then
-   
+   SWEP.PrintName = "M3 Super 90"
    SWEP.Slot      = 2 -- add 1 to get the slot number key
    SWEP.Icon = "vgui/ttt/icon_pumpshotgun"
 
    SWEP.ViewModelFOV  = 72
    SWEP.ViewModelFlip = true
 end
-
-SWEP.PrintName = "M3 Super 90"
 
 -- Always derive from weapon_tttbase.
 SWEP.Base				= "weapon_tttbase"
@@ -27,14 +25,15 @@ SWEP.HoldType			= "shotgun"
 SWEP.Primary.Delay       = 0.85
 SWEP.Primary.Recoil      = 10
 SWEP.Primary.Automatic   = false
-SWEP.Primary.Damage      = 19
+SWEP.Primary.Damage      = 12
 SWEP.Primary.Cone        = 0.085
 SWEP.Primary.Ammo        = "Buckshot"
 SWEP.Primary.ClipSize    = 8
 SWEP.Primary.ClipMax     = 16
 SWEP.Primary.DefaultClip = 8
-SWEP.Primary.NumShots 	 = 10
+SWEP.Primary.NumShots 	 = 12
 SWEP.Primary.Sound       = Sound( "Weapon_M3.Single" )
+SWEP.HeadshotMultiplier  = 2
 SWEP.reloadtimer = 0
 
 SWEP.ViewModel  = "models/weapons/v_shot_m3super90.mdl"

@@ -9,6 +9,7 @@ else
 	LANG.AddToLanguage("english", "awp_desc", "Um poderoso rifle sniper que\nmata seus alvos com um unico tiro.\n\nNota: tem apenas 2 balas.")
 
 	SWEP.Slot = 6
+	SWEP.PrintName = "AWP"
 	SWEP.Icon = "vgui/ttt/icon_awp"
 
 	-- client side model settings
@@ -23,13 +24,12 @@ else
 	}
 end
 
-SWEP.PrintName = "AWP"
-
 -- always derive from weapon_tttbase
 SWEP.Base = "weapon_tttbase"
 
 --[[Default GMod values]]--
 SWEP.Primary.Ammo = "none"
+SWEP.Zoom	  = 30
 SWEP.Primary.Delay = 2
 SWEP.Primary.Recoil = 10
 SWEP.Primary.Cone = 0.001
@@ -46,6 +46,7 @@ SWEP.HeadshotMultiplier = 6
 
 --[[Model settings]]--
 SWEP.HoldType = "ar2"
+SWEP.OriginalHT = "ar2"
 SWEP.ViewModel = Model("models/weapons/cstrike/c_snip_awp.mdl")
 SWEP.WorldModel = Model("models/weapons/w_snip_awp.mdl")
 
@@ -99,8 +100,10 @@ end
 function SWEP:SetZoom(state)
 	if (SERVER and IsValid(self.Owner) and self.Owner:IsPlayer()) then
 		if (state) then
-			self.Owner:SetFOV(30, 0.3)
+			self.Owner:SetFOV(self.Zoom, 0.3)
+			self:SetHoldType('rpg')
 		else
+			self:SetHoldType(self.OriginalHT)
 			self.Owner:SetFOV(0, 0.2)
 		end
 	end

@@ -2,14 +2,14 @@ AddCSLuaFile()
 
 DEFINE_BASECLASS "weapon_tttbase"
 
-SWEP.HoldType               = "shotgun"
+SWEP.HoldType               = "physgun"
 
 if CLIENT then
-   
+   SWEP.PrintName           = "Lançador de Newton"
    SWEP.Slot                = 8
 
    SWEP.ViewModelFlip       = false
-   SWEP.ViewModelFOV        = 54
+   SWEP.ViewModelFOV        = 60
 
    SWEP.EquipMenuData = {
       type = "item_weapon",
@@ -18,8 +18,6 @@ if CLIENT then
 
    SWEP.Icon               = "vgui/ttt/icon_supernewtonbs"
 end
-
-SWEP.PrintName           = "Lançador de Newton"
 
 SWEP.Base                  = "weapon_tttbase"
 
@@ -45,16 +43,16 @@ SWEP.CanBuy                = {ROLE_TRAITOR}
 SWEP.WeaponID              = AMMO_PUSH
 
 SWEP.UseHands              = true
-SWEP.ViewModel             = "models/weapons/c_supernewtonbs.mdl"
-SWEP.WorldModel            = "models/weapons/w_supernewtonbs.mdl"
+SWEP.ViewModel             = "models/weapons/c_newton_launcher.mdl"
+SWEP.WorldModel            = "models/weapons/w_newton_launcher.mdl"
 
 AccessorFuncDT(SWEP, "charge", "Charge")
 
 SWEP.IsCharging            = false
 SWEP.NextCharge            = 0
 
-local CHARGE_AMOUNT = 0.02
-local CHARGE_DELAY = 0.02
+local CHARGE_AMOUNT        = 0.02
+local CHARGE_DELAY         = 0.02
 
 local math = math
 
@@ -200,8 +198,8 @@ end
 function SWEP:PreDrop(death_drop)
    -- allow dropping for now, see if it helps against heisenbug on owner death
 --   if death_drop then
-   self.IsCharging = false
-   self:SetCharge(0)
+   -- self.IsCharging = false
+   -- self:SetCharge(0)
 --   elseif self.IsCharging then
 --      self:ChargedAttack()
 --   end
@@ -213,8 +211,8 @@ function SWEP:OnRemove()
 end
 
 function SWEP:Deploy()
-   self.IsCharging = false
-   self:SetCharge(0)
+   -- self.IsCharging = false
+   -- self:SetCharge(0)
    return true
 end
 

@@ -7,6 +7,7 @@ if SERVER then
 	resource.AddWorkshop("253736374")
 else
 
+	SWEP.PrintName = "AUG"
 	SWEP.Slot = 2
 	SWEP.Icon = "vgui/ttt/icon_aug"
 
@@ -16,14 +17,13 @@ else
 	SWEP.ViewModelFOV = 60
 end
 
-SWEP.PrintName = "AUG"
-
 -- always derive from weapon_tttbase
 SWEP.Base = "weapon_tttbase"
 
 --[[Default GMod values]]--
+SWEP.Zoom         = 40
 SWEP.Primary.Ammo = "SMG1"
-SWEP.Primary.Delay = 0.0875
+SWEP.Primary.Delay = 0.15
 SWEP.Primary.Recoil = 1.00
 SWEP.Primary.Cone = 0.015
 SWEP.Primary.Damage = 18
@@ -37,7 +37,8 @@ SWEP.Secondary.Delay = 0.3
 SWEP.Secondary.Sound = Sound("Default.Zoom")
 
 --[[Model settings]]--
-SWEP.HoldType = "ar2"
+SWEP.HoldType     = "smg"
+SWEP.OriginalHT   = "smg"
 SWEP.ViewModel = Model("models/weapons/cstrike/c_rif_aug.mdl")
 SWEP.WorldModel = Model("models/weapons/w_rif_aug.mdl")
 
@@ -87,8 +88,10 @@ end
 function SWEP:SetZoom(state)
 	if (SERVER and IsValid(self.Owner) and self.Owner:IsPlayer()) then
 		if (state) then
-			self.Owner:SetFOV(40, 0.3)
+			self.Owner:SetFOV(self.Zoom, 0.3)
+			self:SetHoldType('rpg')
 		else
+			self:SetHoldType(self.OriginalHT)
 			self.Owner:SetFOV(0, 0.2)
 		end
 	end

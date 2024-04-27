@@ -6,7 +6,7 @@ if SERVER then
 	AddCSLuaFile()
 	resource.AddWorkshop("253737302")
 else
-
+	SWEP.PrintName = "MP5"
 	SWEP.Slot = 2
 	SWEP.Icon = "vgui/ttt/icon_mp5"
 
@@ -15,8 +15,6 @@ else
 	SWEP.ViewModelFlip = false -- should the weapon be hold with the left or the right hand
 	SWEP.ViewModelFOV = 60
 end
-
-SWEP.PrintName = "MP5"
 
 -- always derive from weapon_tttbase
 SWEP.Base = "weapon_tttbase"
@@ -35,7 +33,7 @@ SWEP.Primary.DefaultClip = 30
 SWEP.Primary.Sound = Sound("Weapon_MP5Navy.Single")
 
 --[[Model settings]]--
-SWEP.HoldType = "ar2"
+SWEP.HoldType = "smg"
 SWEP.ViewModel = Model("models/weapons/cstrike/c_smg_mp5.mdl")
 SWEP.WorldModel = Model("models/weapons/w_smg_mp5.mdl")
 

@@ -4,7 +4,7 @@ AddCSLuaFile()
 
 DEFINE_BASECLASS "weapon_tttbase"
 
-SWEP.HoldType               = "pistol"
+SWEP.HoldType               = "melee2"
 
 if CLIENT then
    SWEP.PrintName           = "magnet_name"
@@ -164,44 +164,44 @@ end
 
 if SERVER then
 
-local ent_diff = vector_origin
-local ent_diff_time = CurTime()
+   local ent_diff = vector_origin
+   local ent_diff_time = CurTime()
 
-local stand_time = 0
-function SWEP:Think()
-   BaseClass.Think(self)
-   if not self:CheckValidity() then return end
+   local stand_time = 0
+   function SWEP:Think()
+      BaseClass.Think(self)
+      if not self:CheckValidity() then return end
 
-   -- If we are too far from our object, force a drop. To avoid doing this
-   -- vector math extremely often (esp. when everyone is carrying something)
-   -- even though the occurrence is very rare, limited to once per
-   -- second. This should be plenty to catch the rare glitcher.
-   if CurTime() > ent_diff_time then
-      ent_diff = self:GetPos() - self.EntHolding:GetPos()
-      if ent_diff:Dot(ent_diff) > 40000 then
-         self:Reset()
-         return
+      -- If we are too far from our object, force a drop. To avoid doing this
+      -- vector math extremely often (esp. when everyone is carrying something)
+      -- even though the occurrence is very rare, limited to once per
+      -- second. This should be plenty to catch the rare glitcher.
+      if CurTime() > ent_diff_time then
+         ent_diff = self:GetPos() - self.EntHolding:GetPos()
+         if ent_diff:Dot(ent_diff) > 40000 then
+            self:Reset()
+            return
+         end
+
+         ent_diff_time = CurTime() + 1
       end
 
-      ent_diff_time = CurTime() + 1
-   end
+      if CurTime() > stand_time then
 
-   if CurTime() > stand_time then
+         if PlayerStandsOn(self.EntHolding) then
+            self:Reset()
+            return
+         end
 
-      if PlayerStandsOn(self.EntHolding) then
-         self:Reset()
-         return
+         stand_time = CurTime() + 0.1
       end
 
-      stand_time = CurTime() + 0.1
+      self.CarryHack:SetPos(self:GetOwner():EyePos() + self:GetOwner():GetAimVector() * 70)
+
+      self.CarryHack:SetAngles(self:GetOwner():GetAngles())
+
+      self.EntHolding:PhysWake()
    end
-
-   self.CarryHack:SetPos(self:GetOwner():EyePos() + self:GetOwner():GetAimVector() * 70)
-
-   self.CarryHack:SetAngles(self:GetOwner():GetAngles())
-
-   self.EntHolding:PhysWake()
-end
 
 end
 
@@ -542,6 +542,7 @@ end
 if SERVER then
    function SWEP:Initialize()
       self.dt.can_rag_pin = pin_rag:GetBool()
+      self.dt.can_rag_pin_inno = pin_rag_inno:GetBool()
       self.dt.carried_rag = nil
 
       return self.BaseClass.Initialize(self)
@@ -583,7 +584,7 @@ if CLIENT then
       if self.dt.can_rag_pin and IsValid(self.dt.carried_rag) then
          local client = LocalPlayer()
 
-         if not client:IsSpec() and client:IsTraitor() then
+         if not client:IsSpec() and (self.dt.can_rag_pin_inno or client:IsTraitor()) then
             local tr = util.TraceLine({start  = client:EyePos(),
                endpos = client:EyePos() + (client:GetAimVector() * PIN_RAG_RANGE),
                filter = {client, self, self.dt.carried_rag},

@@ -1,9 +1,9 @@
 AddCSLuaFile()
 
-SWEP.HoldType              = "crossbow"
+SWEP.HoldType              = "shotgun"
 
 if CLIENT then
-   
+   SWEP.PrintName             = "M249"
    SWEP.Slot               = 2
 
    SWEP.ViewModelFlip      = false
@@ -13,7 +13,6 @@ if CLIENT then
    SWEP.IconLetter         = "z"
 end
 
-SWEP.PrintName          = "M249"
 
 SWEP.Base                  = "weapon_tttbase"
 
@@ -39,7 +38,7 @@ SWEP.UseHands              = true
 SWEP.ViewModel             = "models/weapons/cstrike/c_mach_m249para.mdl"
 SWEP.WorldModel            = "models/weapons/w_mach_m249para.mdl"
 
-SWEP.NoSights = true
+-- SWEP.NoSights = true
 
---SWEP.IronSightsPos         = Vector(-5.96, -5.119, 2.349)
---SWEP.IronSightsAng         = Vector(0, 0, 0)
+SWEP.IronSightsPos         = Vector(-5.96, -5.119, 2.349)
+SWEP.IronSightsAng         = Vector(0, 0, 0)

@@ -1,9 +1,10 @@
 AddCSLuaFile()
 
 SWEP.HoldType              = "ar2"
+SWEP.OriginalHT            = "ar2"
 
 if CLIENT then
-   
+   SWEP.PrintName          = "rifle_name"
    SWEP.Slot               = 2
 
    SWEP.ViewModelFlip      = false
@@ -13,19 +14,18 @@ if CLIENT then
    SWEP.IconLetter         = "n"
 end
 
-SWEP.PrintName             = "Steyr Scout"
-
 SWEP.Base                  = "weapon_tttbase"
 
 SWEP.Kind                  = WEAPON_HEAVY
 SWEP.WeaponID              = AMMO_RIFLE
+SWEP.Zoom                  = 20
 
-SWEP.Primary.Delay         = 1.1
+SWEP.Primary.Delay         = 1.5
 SWEP.Primary.Recoil        = 7
 SWEP.Primary.Automatic     = true
 SWEP.Primary.Ammo          = "357"
 SWEP.Primary.Damage        = 50
-SWEP.Primary.Cone          = 0.005
+SWEP.Primary.Cone          = 0.001
 SWEP.Primary.ClipSize      = 10
 SWEP.Primary.ClipMax       = 20 -- keep mirrored to ammo
 SWEP.Primary.DefaultClip   = 10
@@ -49,8 +49,10 @@ SWEP.IronSightsAng         = Vector( 2.6, 1.37, 3.5 )
 function SWEP:SetZoom(state)
    if IsValid(self:GetOwner()) and self:GetOwner():IsPlayer() then
       if state then
-         self:GetOwner():SetFOV(20, 0.3)
+         self:SetHoldType('rpg')
+         self:GetOwner():SetFOV(self.Zoom, 0.3)
       else
+         self:SetHoldType(self.OriginalHT)
          self:GetOwner():SetFOV(0, 0.2)
       end
    end

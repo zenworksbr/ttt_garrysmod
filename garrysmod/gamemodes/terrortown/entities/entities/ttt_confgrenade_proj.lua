@@ -3,13 +3,15 @@ AddCSLuaFile()
 ENT.Type = "anim"
 ENT.Base = "ttt_basegrenade_proj"
 ENT.Model = Model("models/weapons/w_eq_fraggrenade_thrown.mdl")
+-- ENT.Model = Model( "models/weapons/w_grenade.mdl" )
+-- ENT.WorldMaterial = 'zapgrenade/models/items/w_grenadesheet_proj'
+-- ENT.GrenadeLight = Material("sprites/light_glow02_add")
+-- ENT.GrenadeColor = Color(173, 255, 236)
+-- in case we remove zap grenade
 
 local ttt_allow_jump = CreateConVar("ttt_allow_discomb_jump", "0")
 
 local function PushPullRadius(pos, pusher)
-
--- remover o efeito de puxar itens mas lançar jogadores longe
--- faz com que tudo seja jogado para longe
 local radius = 300 -- 300
 local phys_force = -1000 -- -1000
 local push_force = 600 -- 600
@@ -49,10 +51,6 @@ local push_force = 600 -- 600
       end
    end
 
-   -- efeito mais interessante para a explosão da discomb
-   -- pode, rarissimamente, causar a morte de um jogador que esteja
-   -- exatamente em cima da granada no momento da explosão
-   -- mesmo assim, me recuso a trazer o efeito antigo de volta
    local phexp = ents.Create("prop_combine_ball")
    if IsValid(phexp) then
       phexp:SetPos(pos)
@@ -65,8 +63,6 @@ local push_force = 600 -- 600
    end
 end
 
--- efeito sonoro padrão
---local zapsound = Sound("npc/assassin/ball_zap1.wav")
 function ENT:Explode(tr)
    if SERVER then
       self:SetNoDraw(true)
@@ -95,7 +91,6 @@ function ENT:Explode(tr)
       util.Effect("HelicopterMegaBomb", effect, true, true)
       util.Effect("cball_explode", effect, true, true)
 
-      --sound.Play(zapsound, pos, 100, 100)
    else
       local spos = self:GetPos()
       local trs = util.TraceLine({start=spos + Vector(0,0,64), endpos=spos + Vector(0,0,-128), filter=self})
@@ -104,3 +99,35 @@ function ENT:Explode(tr)
       self:SetDetonateExact(0)
    end
 end
+
+-- function ENT:Initialize()
+
+--    --new code for custom skin
+-- 	self:SetModel("models/weapons/w_grenade.mdl")
+-- 	self:SetSubMaterial(0, self.WorldMaterial)
+--    -- self.Entity:EmitSound( "weapons/slam/throw.wav", SNDLVL_100dB )
+-- 	--code for sprite trail
+--    if SERVER then
+--       util.SpriteTrail(self, 0, Color(173, 255, 236), false, 25, 1, 4, 1/(15+1)*0.5, "trails/laser.vmt")
+--    end
+
+--    return self.BaseClass.Initialize( self )
+-- end
+
+-- hook.Add( "PreRender", "ZapGrenProj_DynamicLight", function()
+-- 	for k, v in pairs( ents.FindByClass( "ttt_zapgren_proj" ) ) do
+-- 		local dlight = DynamicLight( v:EntIndex() )
+-- 		if ( dlight ) then
+-- 			dlight.pos = v:GetPos()
+-- 			dlight.r = 173
+-- 			dlight.g = 255
+-- 			dlight.b = 236
+-- 			dlight.brightness = 5
+-- 			dlight.Decay = 384
+-- 			dlight.Size = 128
+-- 			dlight.DieTime = CurTime() + 0.1
+-- 			dlight.Style = 6
+-- 		end
+			
+-- 	end
+-- end )

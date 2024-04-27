@@ -6,7 +6,7 @@ if SERVER then
 	AddCSLuaFile()
 	resource.AddWorkshop("635030422")
 else
-
+	SWEP.PrintName = "SG-550"
 	SWEP.Slot = 2
 	SWEP.Icon = "vgui/ttt/icon_sg550"
 
@@ -16,14 +16,13 @@ else
 	SWEP.ViewModelFOV = 60
 end
 
-SWEP.PrintName = "SG-550"
-
 -- always derive from weapon_tttbase
 SWEP.Base = "weapon_tttbase"
 
 --[[Default GMod values]]--
 SWEP.Primary.Ammo = "357"
-SWEP.Primary.Delay = 0.32 -- 35
+SWEP.Zoom	  = 35
+SWEP.Primary.Delay = 0.36 -- 35
 SWEP.Primary.Recoil = 4.5 -- 4
 SWEP.Primary.Cone = 0.006 -- 0.004
 SWEP.Primary.Damage = 30 -- 40
@@ -38,6 +37,7 @@ SWEP.HeadshotMultiplier = 5 -- 4
 
 --[[Model settings]]--
 SWEP.HoldType = "ar2"
+SWEP.OriginalHT = "ar2"
 SWEP.ViewModel = Model("models/weapons/cstrike/c_snip_sg550.mdl")
 SWEP.WorldModel = Model("models/weapons/w_snip_sg550.mdl")
 
@@ -87,9 +87,11 @@ end
 function SWEP:SetZoom(state)
 	if (SERVER and IsValid(self.Owner) and self.Owner:IsPlayer()) then
 		if (state) then
-			self.Owner:SetFOV(35, 0.3)
+			self.Owner:SetFOV(self.Zoom, 0.3)
+			self:SetHoldType('rpg')
 		else
-		self.Owner:SetFOV(0, 0.2)
+			self.Owner:SetFOV(0, 0.2)
+			self:SetHoldType(self.OriginalHT)
 		end
 	end
 end

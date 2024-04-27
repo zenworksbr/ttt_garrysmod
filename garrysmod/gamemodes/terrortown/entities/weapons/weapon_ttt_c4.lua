@@ -4,6 +4,7 @@ AddCSLuaFile()
 
 SWEP.HoldType               = "slam"
 
+-- possible C4 balancing approach for small maps
 -- local isMapBlackListed = function(arr, val)
 --    for index, value in ipairs(arr) do
 --       if val == value then
@@ -25,14 +26,14 @@ SWEP.HoldType               = "slam"
 -- print('O mapa ' .. map .. ' não terá C4? ' .. isMapBlackListed(blacklisted_maps, map))
 
 -- if isMapBlackListed(blacklisted_maps, map) then
---    return ''
+--    return nil
 -- end
 
 --    return '{ROLE_TRAITOR}'
 -- end
 
 if CLIENT then
-
+   SWEP.PrintName           = "C4"
    SWEP.Slot                = 6
    
    SWEP.ViewModelFlip      = false
@@ -48,8 +49,6 @@ if CLIENT then
    SWEP.Icon                = "vgui/ttt/icon_c4"
    SWEP.IconLetter          = "I"
 end
-
-SWEP.PrintName           = "C4"
 
 SWEP.Base                   = "weapon_tttbase"
 

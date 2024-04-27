@@ -7,7 +7,8 @@ if SERVER then
 end
 
 if CLIENT then
-   
+   SWEP.PrintName = "AK-47"
+   SWEP.DrawCrosshair   = false
    SWEP.Slot      = 2 -- add 1 to get the slot number key
 
    SWEP.ViewModelFOV  = 72
@@ -16,8 +17,6 @@ if CLIENT then
    SWEP.Icon = "VGUI/ttt/icon_ak47"
 end
 
-SWEP.PrintName = "AK-47"
-
 -- Always derive from weapon_tttbase.
 SWEP.Base				= "weapon_tttbase"
 
@@ -25,12 +24,12 @@ SWEP.Base				= "weapon_tttbase"
 
 SWEP.HoldType			= "ar2"
 
-SWEP.Primary.Delay	= 0.10
+SWEP.Primary.Delay	= 0.15
 SWEP.Primary.Recoil	= 2
 SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "smg1"
 SWEP.Primary.Damage = 25
-SWEP.HeadshotMultiplier = 2.4
+SWEP.HeadshotMultiplier = 1.6
 SWEP.Primary.Cone = 0.018
 SWEP.Primary.ClipSize = 30
 SWEP.Primary.ClipMax = 60

@@ -6,9 +6,9 @@ if SERVER then
 	AddCSLuaFile()
 	resource.AddWorkshop("253737741")
 else
-	
 	SWEP.Slot = 2
 	SWEP.Icon = "vgui/ttt/icon_sg552"
+	SWEP.PrintName = "SG-552"
 
 	-- client side model settings
 	SWEP.UseHands = true -- should the hands be displayed
@@ -16,12 +16,11 @@ else
 	SWEP.ViewModelFOV = 59
 end
 
-SWEP.PrintName = "SG-552"
-
 -- always derive from weapon_tttbase
 SWEP.Base = "weapon_tttbase"
 
 --[[Default GMod values]]--
+SWEP.Zoom         = 40
 SWEP.Primary.Ammo = "SMG1"
 SWEP.Primary.Delay = 0.1
 SWEP.Primary.Recoil = 1
@@ -32,12 +31,13 @@ SWEP.Primary.ClipSize = 30
 SWEP.Primary.ClipMax = 60
 SWEP.Primary.DefaultClip = 30
 SWEP.Primary.Sound = Sound("Weapon_SG552.Single")
-SWEP.Secondary.Delay = 0.3
+SWEP.Secondary.Delay = 0.10
 SWEP.Secondary.Sound = Sound("Default.Zoom")
-SWEP.HeadshotMultiplier    = 2.8
+SWEP.HeadshotMultiplier    = 1.5
 
 --[[Model settings]]--
 SWEP.HoldType = "ar2"
+SWEP.OriginalHT = "ar2"
 SWEP.ViewModel = Model("models/weapons/cstrike/c_rif_sg552.mdl")
 SWEP.WorldModel = Model("models/weapons/w_rif_sg552.mdl")
 
@@ -87,8 +87,10 @@ end
 function SWEP:SetZoom(state)
 	if (SERVER and IsValid(self.Owner) and self.Owner:IsPlayer()) then
 		if (state) then
-			self.Owner:SetFOV(40, 0.3)
+			self.Owner:SetFOV(self.Zoom, 0.3)
+			self:SetHoldType('rpg')
 		else
+			self:SetHoldType(self.OriginalHT)
 			self.Owner:SetFOV(0, 0.2)
 		end
 	end

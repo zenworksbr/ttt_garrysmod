@@ -3,23 +3,21 @@ AddCSLuaFile()
 SWEP.HoldType                = "melee"
 
 if CLIENT then
-
+   SWEP.PrintName            = "crowbar_name"
    SWEP.Slot                 = 0
 
    SWEP.DrawCrosshair        = false
    SWEP.ViewModelFlip        = false
-   SWEP.ViewModelFOV         = 54
+   SWEP.ViewModelFOV         = 60
 
    SWEP.Icon                 = "vgui/ttt/icon_cbar"
 end
 
-SWEP.PrintName               = "Crowbar"
-
 SWEP.Base                    = "weapon_tttbase"
 
 SWEP.UseHands                = true
-SWEP.ViewModel               = "models/weapons/c_crowbar.mdl"
-SWEP.WorldModel              = "models/weapons/w_crowbar.mdl"
+SWEP.ViewModel               = "models/weapons/c_wrench.mdl"
+SWEP.WorldModel              = "models/weapons/w_wrench.mdl"
 
 SWEP.Primary.Damage          = 20
 SWEP.Primary.ClipSize        = -1
@@ -32,7 +30,7 @@ SWEP.Secondary.ClipSize      = -1
 SWEP.Secondary.DefaultClip   = -1
 SWEP.Secondary.Automatic     = true
 SWEP.Secondary.Ammo          = "none"
-SWEP.Secondary.Delay         = 3
+SWEP.Secondary.Delay         = 2
 
 SWEP.Kind                    = WEAPON_MELEE
 SWEP.WeaponID                = AMMO_CROWBAR
@@ -52,7 +50,7 @@ local sound_open = Sound("DoorHandles.Unlocked3")
 
 if SERVER then
    CreateConVar("ttt_crowbar_unlocks", "1", FCVAR_ARCHIVE)
-   CreateConVar("ttt_crowbar_pushforce", "600", FCVAR_NOTIFY)
+   CreateConVar("ttt_crowbar_pushforce", "395", FCVAR_NOTIFY)
 end
 
 -- only open things that have a name (and are therefore likely to be meant to
@@ -246,6 +244,14 @@ function SWEP:SecondaryAttack()
 
       self:EmitSound(sound_single)      
       self:SendWeaponAnim( ACT_VM_HITCENTER )
+      -- if self:GetOwner() == LocalPlayer() then
+      --    VManip:PlayAnim("usedoor")
+      --    timer.Simple(0.5, function() 
+      --       if not IsValid(LocalPlayer()) then return end
+
+      --       VManip:QuitHolding("usedoor")
+      --    end)
+      -- end
 
       self:SetNextSecondaryFire( CurTime() + self.Secondary.Delay )
    end

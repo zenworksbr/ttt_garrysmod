@@ -139,7 +139,7 @@ if CLIENT then
       end
 
       local client = LocalPlayer()
-      if disable_crosshair:GetBool() or (not IsValid(client)) then return end
+      -- if disable_crosshair:GetBool() or (not IsValid(client)) then return end
 
       local sights = (not self.NoSights) and self:GetIronsights()
 
@@ -460,9 +460,9 @@ end
 --- Dummy functions that will be replaced when SetupDataTables runs. These are
 --- here for when that does not happen (due to e.g. stacking base classes)
 function SWEP:GetIronsightsTime() return -1 end
-function SWEP:SetIronsightsTime( time ) end
+function SWEP:SetIronsightsTime() end
 function SWEP:GetIronsightsPredicted() return false end
-function SWEP:SetIronsightsPredicted( bool ) end
+function SWEP:SetIronsightsPredicted() end
 
 -- Set up ironsights dt bool. Weapons using their own DT vars will have to make
 -- sure they call this.

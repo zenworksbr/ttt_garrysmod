@@ -3,11 +3,12 @@ AddCSLuaFile()
 SWEP.HoldType              = "pistol"
 
 if CLIENT then
-   
+   SWEP.PrintName             = "USP-S"
    SWEP.Slot               = 1
 
    SWEP.ViewModelFlip      = false
-   SWEP.ViewModelFOV       = 54
+   SWEP.ViewModelFOV       = 70
+   SWEP.UseHands           = true
 
    SWEP.EquipMenuData = {
       type = "item_weapon",
@@ -17,8 +18,6 @@ if CLIENT then
    SWEP.Icon               = "vgui/ttt/icon_silenced"
    SWEP.IconLetter         = "a"
 end
-
-SWEP.PrintName          = "USP-S"
 
 SWEP.Base                  = "weapon_tttbase"
 
@@ -46,6 +45,9 @@ SWEP.UseHands              = true
 SWEP.ViewModel             = "models/weapons/cstrike/c_pist_usp.mdl"
 SWEP.WorldModel            = "models/weapons/w_pist_usp_silencer.mdl"
 
+SWEP.MuzzleAttachment           = "1" -- Should be "1" for CSS models or "muzzle" for hl2 models
+SWEP.ShellAttachment            = "2" -- Should be "2" for CSS models or "shell" for hl2 models
+
 SWEP.IronSightsPos         = Vector( -5.91, -4, 2.84 )
 SWEP.IronSightsAng         = Vector(-0.5, 0, 0)
 
@@ -60,6 +62,6 @@ end
 -- We were bought as special equipment, and we have an extra to give
 function SWEP:WasBought(buyer)
    if IsValid(buyer) and IsPlayer(buyer) then -- probably already self:GetOwner()
-      --buyer:GiveAmmo(24, "Pistol", true)
+      buyer:GiveAmmo(24, "item_ammo_pistol_ttt", true)
    end
 end
