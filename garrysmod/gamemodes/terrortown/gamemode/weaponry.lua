@@ -236,7 +236,7 @@ local function DropActiveWeapon(ply)
       return
    end
 
-   ply:AnimPerformGesture(ACT_GMOD_GESTURE_ITEM_PLACE)
+   ply:AnimPerformGesture(ACT_GMOD_GESTURE_ITEM_GIVE)
 
    WEPS.DropNotifiedWeapon(ply, wep)
 end
@@ -256,6 +256,8 @@ local function DropActiveAmmo(ply)
       return
    end
 
+   ply:AnimPerformGesture(ACT_GMOD_GESTURE_ITEM_GIVE)
+
    local pos, ang = ply:GetShootPos(), ply:EyeAngles()
    local dir = (ang:Forward() * 32) + (ang:Right() * 6) + (ang:Up() * -5)
 
@@ -263,8 +265,6 @@ local function DropActiveAmmo(ply)
    if tr.HitWorld then return end
 
    wep:SetClip1(0)
-
-   ply:AnimPerformGesture(ACT_GMOD_GESTURE_ITEM_GIVE)
 
    local box = ents.Create(wep.AmmoEnt)
    if not IsValid(box) then return end
