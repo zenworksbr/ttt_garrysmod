@@ -83,6 +83,19 @@ function HELPSCRN:Show()
 
    dgui:CheckBox(GetTranslation("set_cross_disable"), "ttt_disable_crosshair")
 
+   dgui:CheckBox(GetTranslation("hitmarkers"), "hitmarkers_enable")
+
+   dgui:CheckBox(GetTranslation("righthand"), "cl_righthand")
+
+   dgui:CheckBox(GetTranslation("first_person_body"), "cl_gm_body")
+
+   cb = dgui:NumSlider(GetTranslation("first_person_distance"), "cl_gm_body_forward_distance", 8, 32, 1)
+   if cb.Label then
+      cb.Label:SetWrap(true)
+   end
+
+   dgui:CheckBox(GetTranslation("first_person_shadow"), "cl_gm_body_enable_shadow")
+
    dgui:CheckBox(GetTranslation("set_minimal_id"), "ttt_minimal_targetid")
 
    dgui:CheckBox(GetTranslation("set_healthlabel"), "ttt_health_label")
@@ -92,7 +105,7 @@ function HELPSCRN:Show()
 
    cb = dgui:CheckBox(GetTranslation("set_fastsw"), "ttt_weaponswitcher_fast")
    cb:SetTooltip(GetTranslation("set_fastsw_tip"))
-      
+
    cb = dgui:CheckBox(GetTranslation("set_fastsw_menu"), "ttt_weaponswitcher_displayfast")
    cb:SetTooltip(GetTranslation("set_fastswmenu_tip"))
 
@@ -100,7 +113,7 @@ function HELPSCRN:Show()
    cb:SetTooltip(GetTranslation("set_wswitch_tip"))
 
    cb = dgui:CheckBox(GetTranslation("set_cues"), "ttt_cl_soundcues")
-
+   
    cb = dgui:CheckBox(GetTranslation("set_msg_cue"), "ttt_cl_msg_soundcue")
 
    dsettings:AddItem(dgui)

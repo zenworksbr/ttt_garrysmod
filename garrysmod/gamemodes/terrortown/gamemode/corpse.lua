@@ -3,6 +3,14 @@
 -- namespaced because we have no ragdoll metatable
 CORPSE = {}
 
+GlobalBurnedCorpseModelTTT = {
+   "models/Humans/Charple01.mdl",
+	"models/Humans/Charple02.mdl",
+	"models/Humans/Charple03.mdl",
+	"models/Humans/Charple04.mdl"
+   -- "models/players/gingerfast.mdl"
+}
+
 include("corpse_shd.lua")
 
 --- networked data abstraction layer
@@ -38,8 +46,6 @@ local bodyfound = CreateConVar("ttt_announce_body_found", "1")
 
 function GM:TTTCanIdentifyCorpse(ply, corpse, was_traitor)
    -- return true to allow corpse identification, false to disallow
-   
-   -- impedir que inocentes e detetives identifiquem corpos queimados
    if corpse.was_burned and !ply:IsActiveDetective() then return false end
    return true
 end
@@ -54,7 +60,6 @@ local function IdentifyBody(ply, rag)
    end
    
    if not hook.Run("TTTCanIdentifyCorpse", ply, rag, (rag.was_role == ROLE_TRAITOR)) then
-      -- por enquanto, deixar essa verificação neste arquivo
       if corpse.was_burned and !ply:IsActiveDetective() then return false end
       return
    end
@@ -197,7 +202,6 @@ function CORPSE.ShowSearch(ply, rag, covert, long_range)
    if rag:IsOnFire() then
       LANG.Msg(ply, "body_burning")
       return
-   -- cadeia de ifs bem feia, talvez remova num futuro
    elseif (rag:GetNWBool("was_burned") and rag.was_headshot and !ply:IsActiveDetective()) then
       LANG.Msg(ply, "burned_corpse_headshot")
       return
@@ -221,7 +225,7 @@ function CORPSE.ShowSearch(ply, rag, covert, long_range)
    local words = rag.last_words or ""
    local hshot = rag.was_headshot or false
    local dtime = rag.time or 0
-
+   
    local owner = player.GetBySteamID64(rag.sid64)
    owner = IsValid(owner) and owner:EntIndex() or 0
 
@@ -391,10 +395,10 @@ end
 
 local rag_collide = CreateConVar("ttt_ragdoll_collide", "0")
 
--- gambiarra pra evitar bugs. TEMPORÁRIO
-hook.Add('PlayerSpawn', 'TTTPreventPermanentDeathCauseBurned', function(ply)
-   ply:SetVar('died_by_dart_flare_combo', nil)
-   ply:SetVar('died_by_jihad', nil)
+hook.Add('PlayerSpawn', 'TTTPreventPermanentDeathCauseBurnedOrExplodedHead', function(ply)
+   if ply.died_by_dart_flare_combo then ply:SetVar('died_by_dart_flare_combo', nil) end
+   if ply.died_by_jihad then ply:SetVar('died_by_jihad', nil) end
+   if ply.hs_exploded then ply:SetVar('hs_exploded', nil) end
 end)
 
 -- Creates client or server ragdoll depending on settings
@@ -415,6 +419,9 @@ function CORPSE.Create(ply, attacker, dmginfo)
 
    if ply.died_by_jihad or ply.died_by_dart_flare_combo then 
       rag:SetNWBool("was_burned", true)
+   end
+   if ply.hs_exploded then
+      rag:SetNWBool("hs_exploded", true)
    end
 
    rag:Spawn()

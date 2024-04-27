@@ -68,21 +68,13 @@ MUTE_TERROR = 1
 MUTE_ALL = 2
 MUTE_SPEC = 1002
 
--- globais exclusivas do servidor
-
--- sim, isto está TERRÍVEL
-COLORED_NAME_USERGROUPS = {
-   ["STEAM_0:1:128559896"] = Color(200, 15, 15),
-   ["STEAM_0:0:443308993"] = Color(0, 0, 80)
-}
-
+// server specific globals
 NO_VOICE_LIMIT_USERGROUPS = {
    donator = true,
    operator = true,
    operator_donator = true,
    admin_donator = true,
-   helper = true,
-   helper_donator = true,
+   trial_operator = true,
    admin = true,
    superadmin = true
 }
@@ -96,8 +88,7 @@ SB_VIP_PERMS = {
 
 -- Cargos com menos permissões
 SB_BASE_PERMS = {
-   temp_helper = true,
-   helper = true,
+   trial_operator = true,
    operator = true,
    operator_donator = true,
    admin = true,
@@ -108,6 +99,7 @@ SB_BASE_PERMS = {
 -- Cargos com mais permissões
 SB_MOD_PERMS = {
    operator = true,
+   trial_operator = true,
    operator_donator = true,
    admin = true,
    admin_donator = true,
@@ -119,20 +111,23 @@ SB_FULL_PERMS = {
    superadmin = true
 }
 
--- nomes e ícones customizados para cada cargo do servidor
--- utilizado caso algo dê errado com o addon atlaschat
+-- Nomes e ícones customizados para cada cargo do servidor. Atualizar de acordo com mudanças feitas no Atlaschat
 SCOREBOARD_DEFAULT_RANKS = {
    user = {
       name = "Jogador",
       icon = "icon16/user.png"
    },
-   temp_helper = {
-      name = "Ajudante Temporário",
-      icon = "icon16/plugin_error.png"
+   beta_tester = {
+      name = "Beta Tester",
+      icon = "icon16/bug.png"
    },
-   helper = {
-      name = "Ajudante",
-      icon = "icon16/plugin.png"
+   donator = {
+      name = "Doador",
+      icon = "icon16/color_swatch.png"
+   },
+   trial_operator = {
+      name = "Trial Mod",
+      icon = "icon16/plugin_error.png"
    },
    operator = {
       name = "Moderador",
@@ -140,7 +135,7 @@ SCOREBOARD_DEFAULT_RANKS = {
    },
    operator_donator = {
       name = "Moderador Doador",
-      icon = "icon16/award_star_gold_3"
+      icon = "icon16/award_star_gold_3.png"
    },
    admin = {
       name = "Administrador",
@@ -151,20 +146,9 @@ SCOREBOARD_DEFAULT_RANKS = {
       icon = "icon16/award_star_gold_1.png"
    },
    superadmin = {
-      name = "Administrador-Chefe",
+      name = "Fundador",
       icon = "icon16/asterisk_yellow.png"
    }
-}
-
--- modelos utilizados para corpos queimados 
--- aplicável quando ocorre o combo arma de dardos + sinalizador
--- e o utilizador da Jihad
-GlobalBurnedCorpseModelTTT = {
-   "models/Humans/Charple01.mdl",
-	"models/Humans/Charple02.mdl",
-	"models/Humans/Charple03.mdl",
-	"models/Humans/Charple04.mdl"
-   -- "models/players/gingerfast.mdl"
 }
 
 // -----------------------------------------------------------
@@ -212,9 +196,6 @@ local ttt_playermodels = {
 };
 
 function GetRandomPlayerModel()
-
-   -- utilizar método mais ágil e eficiente de aleatorizar itens em uma tabela
-   -- BOAS PRÁTICAS...
    return ttt_playermodels[ math.random( #ttt_playermodels ) ]
 end
 

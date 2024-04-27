@@ -8,6 +8,8 @@ local pairs = pairs
 
 local function ReplaceSingle(ent, newname)
 
+   if not newname then return end 
+
    -- Ammo that has been mapper-placed will not have a pos yet at this point for
    -- reasons that have to do with being really annoying. So don't touch those
    -- so we can replace them later. Grumble grumble.
@@ -78,43 +80,17 @@ local ttt_ents = {
    ttt_random_ammo = true
 }
 
-local ttt_weapons = {
-   weapon_ttt_glock = true,
-   weapon_ttt_m16 = true,
-   weapon_zm_mac10 = true,
-   weapon_zm_pistol = true,
-   weapon_zm_rifle = true,
-   weapon_zm_shotgun = true,
-   weapon_zm_revolver = true,
-   weapon_zm_sledge = true,
-   weapon_ttt_ak47 = true,
-   weapon_ttt_aug = true,
-   weapon_ttt_dual_elites = true,
-   weapon_ttt_famas = true,
-   weapon_ttt_g3sg1 = true,
-   weapon_ttt_galil = true,
-   weapon_ttt_m3 = true,
-   weapon_ttt_mp5 = true,
-   weapon_ttt_p90 = true,
-   weapon_ttt_p228 = true,
-   weapon_ttt_revolver = true,
-   weapon_ttt_sg550 = true,
-   weapon_ttt_sg552 = true,
-   weapon_ttt_tmp = true,
-   m9k_acr = true,
-   m9k_an94 = true,
-   m9k_ar15 = true,
-   m9k_g36c = true,
-   m9k_honeybadger = true,
-   m9k_luger = true,
-   m9k_m92beretta = true,
-   m9k_mk17 = true,
-   m9k_spas12 = true,
-   m9k_sten = true,
-   m9k_tec9 = true,
-   m9k_usp = true,
-   m9k_vector = true
-}
+-- refatorar este código para que detecte as armas com AutoSpawnable do servidor automaticamente para fazer essa substituição
+local ttt_weapons = {}
+
+local all_weps = weapons.GetList()
+for k, v in ipairs(all_weps) do
+   if not v.AutoSpawnable then continue end
+   if v.ClassName == 'shared' then continue end
+   
+   ttt_weapons[v.ClassName] = true
+
+end
 
 -- Replace an ammo entity with the TTT version
 -- Optional cls param is the classname, if the caller already has it handy
@@ -294,7 +270,7 @@ local dummify = {
 };
 
 for k, cls in pairs(dummify) do
-   scripted_ents.Register({Type="point", IsWeaponDummy=true}, cls)
+   scripted_ents.Register({Type="point", IsWeaponDummy=true}, cls, false)
 end
 
 -- Cache this, every ttt_random_weapon uses it in its Init

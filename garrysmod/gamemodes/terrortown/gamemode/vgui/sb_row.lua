@@ -1,5 +1,8 @@
 ---- Scoreboard player score row, based on sandbox version
 -- ARQUIVO COM DIVERSAS MODIFICAÇÕES
+-- SE O ADDON ATLASCHAT FOR REMOVIDO, TERÁ DE CORRIGIR AS REQUISIÇÕES DE INFORMAÇÕES NA PARTE DO CÓDIGO DO MENU DE OPÇÕES DE JOGADOR
+-- COMENTAR A PARTE ATUAL COM AS FUNÇÕES DO ATLASCHAT E DESCOMENTAR A PARTE QUE USAR OBJETOS INTERNOS DESTE ARQUIVO
+
 
 include("sb_info.lua")
 
@@ -7,10 +10,8 @@ include("sb_info.lua")
 local GetTranslation = LANG.GetTranslation
 local GetPTranslation = LANG.GetParamTranslation
 
--- parâmetros para utilização do slider de volume de voz de jogadores
 local sliderOpen = false
 
--- lista de jogadores com chat de texto silenciado
 local mutedPlayers = {}
 
 SB_ROW_HEIGHT = 24 --16
@@ -91,14 +92,6 @@ local rolecolor = {
 
 function GM:TTTScoreboardColorForPlayer(ply)
    if not IsValid(ply) then return namecolor.default end
-
-   -- sim, isto está HORRÍVEL. Eu sei.
-   if COLORED_NAME_USERGROUPS[ply:SteamID()] != nil then
-      return COLORED_NAME_USERGROUPS[ply:SteamID()]
-   elseif ply:IsAdmin() or SB_BASE_PERMS[ply:GetUserGroup()] or SB_MOD_PERMS[ply:GetUserGroup()] or SB_FULL_PERMS[ply:GetUserGroup()] and GetGlobalBool("ttt_highlight_admins", true) then
-      return namecolor.admin
-   end
-   return namecolor.default
 end
 
 function GM:TTTScoreboardRowColorForPlayer(ply)
@@ -321,8 +314,6 @@ function PANEL:DoRightClick()
    if close then menu:Remove() return end
    menu:Open()
    
-   -- menu de interação com comandos diretos
-   -- para serem utilizados por staffs
    local menu = DermaMenu()   
    menu.Player = self:GetPlayer()   
    local close = hook.Call( "TTTScoreboardMenu", nil, menu )   
@@ -338,7 +329,7 @@ function PANEL:DoRightClick()
       SetClipboardText(ply:GetUserGroup())
       chat.AddText(Color(151, 211, 255), "Cargo '", Color(0, 255, 0), ply:GetUserGroup(), Color(151, 211, 255), "', de ", Color(0, 255, 0), ply:Nick(), Color(151, 211, 255), " copiado com sucesso!")
       surface.PlaySound("buttons/button9.wav") 
-   end):SetImage(atlaschat.ranks[ply:GetUserGroup()].icon) -- atlaschat.ranks[ply:GetUserGroup()].icon) -- sb_roles[ply:GetUserGroup()].icon)
+   end):SetImage(SCOREBOARD_DEFAULT_RANKS[ply:GetUserGroup()].icon) -- atlaschat.ranks[ply:GetUserGroup()].icon) -- sb_roles[ply:GetUserGroup()].icon)
    options:AddSpacer()
    options:AddOption("Copiar Nome", function() 
       if !LocalPlayer() then return end
@@ -361,7 +352,7 @@ function PANEL:DoRightClick()
    options:Open()
    
    if (SB_VIP_PERMS[LocalPlayer():GetUserGroup()] and LocalPlayer() == ply) or SB_MOD_PERMS[LocalPlayer():GetUserGroup()] then
-      local superop,supimg = options:AddSubMenu("Cargos")					
+      local superop,supimg = options:AddSubMenu("Cargos")
       supimg:SetImage("icon16/group_edit.png")
    
       superop:AddOption("Remover rank", function()
@@ -372,45 +363,45 @@ function PANEL:DoRightClick()
       if (SB_FULL_PERMS[LocalPlayer():GetUserGroup()]) then
 
          superop:AddSpacer()
-         superop:AddOption("Dar Temp. Helper", function()
-            RunConsoleCommand("ulx","adduser",ply:Nick(),"temp_helper")
+         superop:AddOption("Dar Beta Tester", function()
+            RunConsoleCommand("ulx","adduser",ply:Nick(),"beta_tester")
             surface.PlaySound("buttons/button9.wav")
-         end):SetImage(atlaschat.ranks["temp_helper"].icon)
+         end):SetImage(SCOREBOARD_DEFAULT_RANKS["beta_tester"].icon)
 
-         superop:AddOption("Dar cargo Ajudante", function()
-            RunConsoleCommand("ulx","adduser",ply:Nick(),"helper")
+         superop:AddOption("Dar cargo Trial Mod", function()
+            RunConsoleCommand("ulx","adduser",ply:Nick(),"trial_operator")
             surface.PlaySound("buttons/button9.wav")
-         end):SetImage(atlaschat.ranks["helper"].icon)
+         end):SetImage(SCOREBOARD_DEFAULT_RANKS["trial_operator"].icon)
 
          superop:AddOption("Dar cargo Doador", function()
             RunConsoleCommand("ulx","adduser",ply:Nick(),"donator")
             surface.PlaySound("buttons/button9.wav")
-         end):SetImage(atlaschat.ranks["donator"].icon)
+         end):SetImage(SCOREBOARD_DEFAULT_RANKS["donator"].icon)
 
          superop:AddOption("Dar cargo Moderador", function()
             RunConsoleCommand("ulx","adduser",ply:Nick(),"operator")
             surface.PlaySound("buttons/button9.wav")
-         end):SetImage(atlaschat.ranks["operator"].icon)
+         end):SetImage(SCOREBOARD_DEFAULT_RANKS["operator"].icon)
 
-         superop:AddOption("Dar cargo Mod Doador", function()
+         superop:AddOption("Dar cargo Mod. Doador", function()
             RunConsoleCommand("ulx","adduser",ply:Nick(),"operator_donator")
             surface.PlaySound("buttons/button9.wav")
-         end):SetImage(atlaschat.ranks["operator_donator"].icon)
+         end):SetImage(SCOREBOARD_DEFAULT_RANKS["operator_donator"].icon)
 
          superop:AddOption("Dar cargo Adminstrador", function()
             RunConsoleCommand("ulx","adduser",ply:Nick(),"admin")
             surface.PlaySound("buttons/button9.wav")
-         end):SetImage(atlaschat.ranks["admin"].icon)
+         end):SetImage(SCOREBOARD_DEFAULT_RANKS["admin"].icon)
 
-         superop:AddOption("Dar cargo Admin Doador", function()
+         superop:AddOption("Dar cargo Admin. Doador", function()
             RunConsoleCommand("ulx","adduser",ply:Nick(),"admin_donator")
             surface.PlaySound("buttons/button9.wav")
-         end):SetImage(atlaschat.ranks["admin_donator"].icon)
+         end):SetImage(SCOREBOARD_DEFAULT_RANKS["admin_donator"].icon)
 
-         superop:AddOption("Dar cargo Admin Chefe", function()
+         superop:AddOption("Dar cargo Fundador", function()
             RunConsoleCommand("ulx","adduser",ply:Nick(),"superadmin")
             surface.PlaySound("buttons/button9.wav")
-         end):SetImage(atlaschat.ranks["superadmin"].icon)
+         end):SetImage(SCOREBOARD_DEFAULT_RANKS["superadmin"].icon)
 
          superop:AddSpacer()
          superop:AddOption("Remover cargo", function()
@@ -423,9 +414,9 @@ function PANEL:DoRightClick()
       superop:AddSpacer()
 
    end
-
-   if SB_BASE_PERMS[LocalPlayer():GetUserGroup()] then
       
+   if SB_MOD_PERMS[LocalPlayer():GetUserGroup()] then
+
       local adminop,subimg = options:AddSubMenu("Administrar")					
       subimg:SetImage("icon16/lorry.png")
       
@@ -434,14 +425,10 @@ function PANEL:DoRightClick()
          surface.PlaySound("buttons/button9.wav") 
       end):SetImage("icon16/cut_red.png") 
 
-      if SB_MOD_PERMS[LocalPlayer():GetUserGroup()] then
-
-         adminop:AddOption("Reviver", function() 
-            RunConsoleCommand("ulx","respawn",ply:Nick()) 
-            surface.PlaySound("buttons/button9.wav") 
-         end):SetImage("icon16/rainbow.png")
-
-      end
+      adminop:AddOption("Reviver", function() 
+         RunConsoleCommand("ulx","respawn",ply:Nick()) 
+         surface.PlaySound("buttons/button9.wav") 
+      end):SetImage("icon16/rainbow.png")
 
       adminop:AddSpacer()
       adminop:AddOption("Teleportar", function() 
@@ -481,101 +468,92 @@ function PANEL:DoRightClick()
          RunConsoleCommand("ulx","ungag",ply:Nick()) 
          surface.PlaySound("buttons/button9.wav") 
       end):SetImage("icon16/sound.png")
-      
-      if SB_MOD_PERMS[LocalPlayer():GetUserGroup()] then
 
-         local funop, funimg = options:AddSubMenu("Diversão")
-         funimg:SetImage("icon16/bricks.png")
+      local funop, funimg = options:AddSubMenu("Diversão")
+      funimg:SetImage("icon16/bricks.png")
 
-         local tttop, tttimg = options:AddSubMenu("TTT")
-         tttimg:SetImage("icon16/exclamation.png")
+      local tttop, tttimg = options:AddSubMenu("TTT")
+      tttimg:SetImage("icon16/exclamation.png")
 
-         tttop:AddOption("Forçar Espectador", function()
-            RunConsoleCommand("ulx","fspec",ply:Nick()) 
-            surface.PlaySound("buttons/button9.wav") 
-         end):SetImage("icon16/camera.png")	
+      tttop:AddOption("Forçar Espectador", function()
+         RunConsoleCommand("ulx","fspec",ply:Nick()) 
+         surface.PlaySound("buttons/button9.wav") 
+      end):SetImage("icon16/camera.png")	
 
-         tttop:AddOption("Tirar de Espectador", function()
-            RunConsoleCommand("ulx","unspec",ply:Nick()) 
-            surface.PlaySound("buttons/button9.wav") 
-         end):SetImage("icon16/camera_delete.png")	
+      tttop:AddOption("Tirar de Espectador", function()
+         RunConsoleCommand("ulx","unspec",ply:Nick()) 
+         surface.PlaySound("buttons/button9.wav") 
+      end):SetImage("icon16/camera_delete.png")	
+
+      tttop:AddSpacer()
+      tttop:AddOption("Desabilitar Detetive", function()
+         RunConsoleCommand("ulx", "undetective", ply:Nick())
+         chat.AddText(Color(151, 211, 255), "Jogador '", Color(0, 255, 0), ply:Nick(), Color(151, 211, 255), "' agora estará com o ", Color(0, 255, 0), "Detetive desativado", Color(151, 211, 255), "!")
+         surface.PlaySound("buttons/button9.wav") 
+      end):SetImage("icon16/award_star_delete.png")
+
+      tttop:AddOption("Habilitar Detetive", function()
+         RunConsoleCommand("ulx", "forcedetective", ply:Nick())
+         chat.AddText(Color(151, 211, 255), "Jogador '", Color(0, 255, 0), ply:Nick(), Color(151, 211, 255), "' agora estará com o ", Color(0, 255, 0), "Detetive desativado", Color(151, 211, 255), "!")
+         surface.PlaySound("buttons/button9.wav") 
+      end):SetImage("icon16/award_star_add.png")
+
+      adminop:AddSpacer()			
+      adminop:AddOption("Assistir", function() 
+         RunConsoleCommand("ulx","spectate",ply:Nick()) 
+         surface.PlaySound("buttons/button9.wav") 
+      end):SetImage("icon16/zoom.png")	
+
+      adminop:AddSpacer()
+
+      funop:AddSpacer()
+      funop:AddOption("Explodir", function()
+         RunConsoleCommand("ulx","explode",ply:Nick())
+         surface.PlaySound("buttons/button9.wav")
+      end):SetImage("icon16/asterisk_orange.png")
+
+      funop:AddOption("Launch", function()
+         RunConsoleCommand("ulx","launch",ply:Nick())
+         surface.PlaySound("buttons/button9.wav")
+      end):SetImage("icon16/sport_football.png")
+
+      if SB_FULL_PERMS[LocalPlayer():GetUserGroup()] then
 
          tttop:AddSpacer()
-         tttop:AddOption("Desabilitar Detetive", function()
-            RunConsoleCommand("ulx", "undetective", ply:Nick())
-            chat.AddText(Color(151, 211, 255), "Jogador '", Color(0, 255, 0), ply:Nick(), Color(151, 211, 255), "' agora estará com o ", Color(0, 255, 0), "Detetive desativado", Color(151, 211, 255), "!")
-            surface.PlaySound("buttons/button9.wav") 
-         end):SetImage("icon16/award_star_delete.png")
-
-         tttop:AddOption("Habilitar Detetive", function()
-            RunConsoleCommand("ulx", "forcedetective", ply:Nick())
-            chat.AddText(Color(151, 211, 255), "Jogador '", Color(0, 255, 0), ply:Nick(), Color(151, 211, 255), "' agora estará com o ", Color(0, 255, 0), "Detetive desativado", Color(151, 211, 255), "!")
-            surface.PlaySound("buttons/button9.wav") 
-         end):SetImage("icon16/award_star_add.png")
-
-         adminop:AddSpacer()			
-         adminop:AddOption("Assistir", function() 
-            RunConsoleCommand("ulx","spectate",ply:Nick()) 
-            surface.PlaySound("buttons/button9.wav") 
-         end):SetImage("icon16/zoom.png")	
-
-         adminop:AddSpacer()
-
-         funop:AddSpacer()
-         funop:AddOption("Explodir", function()
-            RunConsoleCommand("ulx","explode",ply:Nick())
+         tttop:AddOption("Forçar Traidor Agora", function()
+            RunConsoleCommand("ulx","force",ply:Nick(),"traitor")
             surface.PlaySound("buttons/button9.wav")
-         end):SetImage("icon16/asterisk_orange.png")
+         end):SetImage("icon16/flag_red.png")
 
-         funop:AddOption("Launch", function()
-            RunConsoleCommand("ulx","launch",ply:Nick())
+         tttop:AddOption("Forçar Detetive Agora", function()
+            RunConsoleCommand("ulx","force",ply:Nick(),"detective")
             surface.PlaySound("buttons/button9.wav")
-         end):SetImage("icon16/sport_football.png")
+         end):SetImage("icon16/flag_blue.png")
 
-         if SB_FULL_PERMS[LocalPlayer():GetUserGroup()] then
+         tttop:AddOption("Forçar Inocente Agora", function()
+            RunConsoleCommand("ulx","force",ply:Nick(),"innocent")
+            surface.PlaySound("buttons/button9.wav")
+         end):SetImage("icon16/flag_green.png")
 
-            funop:AddSpacer()
-            funop:AddOption("Crash", function()
-               RunConsoleCommand("ulx","crash",ply:Nick())
-               surface.PlaySound("buttons/button9.wav")
-            end):SetImage("icon16/cancel.png")
+         tttop:AddSpacer()
+         tttop:AddOption("Traidor Próxima Rodada", function()
+            RunConsoleCommand("ulx","forcenr",ply:Nick(),"traitor")
+            surface.PlaySound("buttons/button9.wav")  
+         end):SetImage("icon16/flag_red.png")
 
-            tttop:AddSpacer()
-            tttop:AddOption("Forçar Traidor Agora", function()
-               RunConsoleCommand("ulx","force",ply:Nick(),"traitor")
-               surface.PlaySound("buttons/button9.wav")
-            end):SetImage("icon16/flag_red.png")
+         tttop:AddOption("Detetive Próxima Rodada", function()
+            RunConsoleCommand("ulx","forcenr",ply:Nick(),"detective")
+            surface.PlaySound("buttons/button9.wav")
+         end):SetImage("icon16/flag_blue.png")
 
-            tttop:AddOption("Forçar Detetive Agora", function()
-               RunConsoleCommand("ulx","force",ply:Nick(),"detective")
-               surface.PlaySound("buttons/button9.wav")
-            end):SetImage("icon16/flag_blue.png")
+         tttop:AddSpacer()
 
-            tttop:AddOption("Forçar Inocente Agora", function()
-               RunConsoleCommand("ulx","force",ply:Nick(),"innocent")
-               surface.PlaySound("buttons/button9.wav")
-            end):SetImage("icon16/flag_green.png")
-
-            tttop:AddSpacer()
-            tttop:AddOption("Traidor Próxima Rodada", function()
-               RunConsoleCommand("ulx","forcenr",ply:Nick(),"traitor")
-               surface.PlaySound("buttons/button9.wav")  
-            end):SetImage("icon16/flag_red.png")
-
-            tttop:AddOption("Detetive Próxima Rodada", function()
-               RunConsoleCommand("ulx","forcenr",ply:Nick(),"detective")
-               surface.PlaySound("buttons/button9.wav")
-            end):SetImage("icon16/flag_blue.png")
-
-            tttop:AddSpacer()
-
-      	end
-            
-         adminop:AddSpacer()	
-         funop:AddSpacer()			
-         options:Open()
-         end		
       end
+         
+      adminop:AddSpacer()	
+      funop:AddSpacer()			
+      options:Open()		
+   end
 end
 
 
