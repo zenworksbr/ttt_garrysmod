@@ -116,16 +116,15 @@ function TOOL:RightClick( trace )
 	local Phys = trace.Entity:GetPhysicsObjectNum( trace.PhysicsBone )
 	self:SetObject( 1, trace.Entity, trace.HitPos, Phys, trace.PhysicsBone, trace.HitNormal )
 
-	local tr = {}
-	tr.start = trace.HitPos
-	tr.endpos = tr.start + ( trace.HitNormal * 16384 )
-	tr.filter = {}
-	tr.filter[ 1 ] = self:GetOwner()
+	local tr_new = {}
+	tr_new.start = trace.HitPos
+	tr_new.endpos = trace.HitPos + ( trace.HitNormal * 16384 )
+	tr_new.filter = { self:GetOwner() }
 	if ( IsValid( trace.Entity ) ) then
-		tr.filter[ 2 ] = trace.Entity
+		table.insert( tr_new.filter, trace.Entity )
 	end
 
-	local tr = util.TraceLine( tr )
+	local tr = util.TraceLine( tr_new )
 	if ( !tr.Hit ) then
 		self:ClearObjects()
 		return false
@@ -166,7 +165,7 @@ function TOOL:RightClick( trace )
 	local AddLength = self:GetClientNumber( "addlength", 0 )
 	local fixed = self:GetClientNumber( "fixed", 1 )
 	local period = self:GetClientNumber( "period", 64 )
-	local starton = self:GetClientNumber( "starton" )
+	local starton = self:GetClientNumber( "starton" ) > 0
 	local material = self:GetClientInfo( "material" )
 	local colorR = self:GetClientNumber( "color_r" )
 	local colorG = self:GetClientNumber( "color_g" )

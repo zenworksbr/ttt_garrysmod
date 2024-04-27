@@ -5,6 +5,7 @@ local surface = surface
 local tostring = tostring
 local ipairs = ipairs
 local setmetatable = setmetatable
+local tonumber = tonumber
 local math = math
 local utf8 = utf8
 local _Color = Color
@@ -132,11 +133,11 @@ local function ExtractParams( p1, p2, p3 )
 			local rgba = colourMatch( p2 )
 
 			if ( rgba == nil ) then
-				rgba = {}
+				rgba = Color( 255, 255, 255, 255 )
 				local x = { "r", "g", "b", "a" }
 				local n = 1
 				for k, v in string.gmatch( p2, "(%d+),?" ) do
-					rgba[ x[ n ] ] = k
+					rgba[ x[ n ] ] = tonumber( k )
 					n = n + 1
 				end
 			end

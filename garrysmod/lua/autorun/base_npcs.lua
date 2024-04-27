@@ -207,7 +207,7 @@ AddNPC( {
 	KeyValues = { SquadName = "zombies" }
 } )
 
-if ( IsMounted( "episodic" ) || IsMounted( "ep2" ) ) then
+if ( IsMounted( "episodic" ) or IsMounted( "ep2" ) ) then
 	AddNPC( {
 		Class = "npc_zombine",
 		Category = Category,
@@ -221,18 +221,18 @@ if ( IsMounted( "ep2" ) ) then
 	game.AddParticles( "particles/antlion_worker.pcf" )
 
 	AddNPC( {
-			Name = "Antlion Guardian",
-			Class = "npc_antlionguard",
-			Category = Category,
-			KeyValues = { cavernbreed = 1, incavern = 1, SquadName = "antlions" },
-			Material = "Models/antlion_guard/antlionGuard2"
+		Name = "Antlion Guardian",
+		Class = "npc_antlionguard",
+		Category = Category,
+		KeyValues = { cavernbreed = 1, incavern = 1, SquadName = "antlions" },
+		Material = "Models/antlion_guard/antlionGuard2"
 	}, "npc_antlionguardian" )
 
 	AddNPC( {
 		Class = "npc_antlion_grub",
 		Category = Category,
-			NoDrop = true,
-			Offset = 1
+		NoDrop = true,
+		Offset = 1
 	} )
 
 	AddNPC( {
@@ -304,6 +304,7 @@ AddNPC( {
 	Class = "npc_combine_s",
 	Category = Category,
 	Model = "models/combine_soldier.mdl",
+	Skin = 0,
 	Weapons = { "weapon_smg1", "weapon_ar2" },
 	KeyValues = { SquadName = "overwatch", Numgrenades = 5 }
 } )
@@ -323,6 +324,7 @@ AddNPC( {
 	Class = "npc_combine_s",
 	Category = Category,
 	Model = "models/combine_soldier_prisonguard.mdl",
+	Skin = 0,
 	Weapons = { "weapon_smg1", "weapon_ar2" },
 	KeyValues = { SquadName = "novaprospekt", Numgrenades = 5 }
 }, "CombinePrison" )
@@ -342,6 +344,7 @@ AddNPC( {
 	Class = "npc_combine_s",
 	Category = Category,
 	Model = "models/combine_super_soldier.mdl",
+	Skin = 0,
 	Weapons = { "weapon_ar2" },
 	KeyValues = { Numgrenades = 10, SquadName = "overwatch" },
 	SpawnFlags = SF_NPC_NO_PLAYER_PUSHAWAY
@@ -436,7 +439,7 @@ if ( IsMounted( "ep2" ) ) then
 end
 
 
-if ( IsMounted( "hl1" ) || IsMounted( "hl1mp" ) ) then
+if ( IsMounted( "hl1" ) or IsMounted( "hl1mp" ) ) then
 
 	Category = "Half-Life: Source"
 
@@ -459,11 +462,12 @@ if ( IsMounted( "hl1" ) || IsMounted( "hl1mp" ) ) then
 	AddNPC( { Class = "monster_alien_controller", Category = Category, NoDrop = true } )
 	AddNPC( { Class = "monster_barney", Category = Category } )
 
-	AddNPC( { Class = "monster_turret", Category = Category, Offset = 0, KeyValues = { orientation = 1 }, OnCeiling = true, SpawnFlags = 32 } )
-	AddNPC( { Class = "monster_miniturret", Category = Category, Offset = 0, KeyValues = { orientation = 1 }, OnCeiling = true, SpawnFlags = 32 } )
+	-- Hack to have it not invert angles again
+	local turretOnDupe = function( npc, data ) npc:SetKeyValue( "spawnflags", bit.bor( npc.SpawnFlags, 2048 ) ) end
+	local turretOnCeiling = function( npc ) npc:SetKeyValue( "orientation", 1 ) end
+	AddNPC( { Class = "monster_turret", Category = Category, Offset = 0, OnCeiling = turretOnCeiling, OnFloor = true, SpawnFlags = 32, OnDuplicated = turretOnDupe } )
+	AddNPC( { Class = "monster_miniturret", Category = Category, Offset = 0, OnCeiling = turretOnCeiling, OnFloor = true, SpawnFlags = 32, OnDuplicated = turretOnDupe } )
 	AddNPC( { Class = "monster_sentry", Category = Category, Offset = 0, OnFloor = true, SpawnFlags = 32 } )
-	--AddNPC( { Name = "Ground Heavy Turret", Class = "monster_turret", Category = Category, Offset = 0, KeyValues = { orientation = 0 }, OnFloor = true, SpawnFlags = 32 }, "monster_turret_gnd" )
-	--AddNPC( { Name = "Ground Mini Turret", Class = "monster_miniturret", Category = Category, Offset = 0, KeyValues = { orientation = 0 }, OnFloor = true, SpawnFlags = 32 }, "monster_miniturret_gnd" )
 
 end
 
@@ -484,7 +488,18 @@ if ( IsMounted( "portal" ) ) then
 		Class = "npc_rocket_turret",
 		Category = Category,
 		OnFloor = true,
+		SpawnFlags = 2, --SF_ROCKET_TURRET_SPAWNMENU, makes it target NPCs
+		Offset = 0,
 		Rotate = Angle( 0, 180, 0 ),
+	} )
+
+	AddNPC( {
+		Class = "npc_security_camera",
+		Category = Category,
+		Offset = -1,
+		SpawnFlags = 32, --SF_SECURITY_CAMERA_AUTOACTIVATE
+		SnapToNormal = true,
+		NoDrop = true
 	} )
 
 end

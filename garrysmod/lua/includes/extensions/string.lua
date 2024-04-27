@@ -92,8 +92,8 @@ function string.Explode( separator, str, withpattern )
 	local current_pos = 1
 
 	for i = 1, string_len( str ) do
-		local start_pos, end_pos = string_find( str, separator, current_pos, !withpattern )
-		if ( !start_pos ) then break end
+		local start_pos, end_pos = string_find( str, separator, current_pos, not withpattern )
+		if ( not start_pos ) then break end
 		ret[ i ] = string_sub( str, current_pos, start_pos - 1 )
 		current_pos = end_pos + 1
 	end
@@ -356,6 +356,12 @@ end
 
 function string.Comma( number, str )
 
+	if ( str ~= nil and not isstring( str ) ) then
+		error( "bad argument #2 to 'string.Comma' (string expected, got " .. type( str ) .. ")" )
+	elseif ( str ~= nil and string.match( str, "%d" ) ~= nil ) then
+		error( "bad argument #2 to 'string.Comma' (non-numerical values expected, got " .. str .. ")" )
+	end
+
 	local replace = str == nil and "%1,%2" or "%1" .. str .. "%2"
 
 	if ( isnumber( number ) ) then
@@ -372,6 +378,34 @@ end
 
 function string.Interpolate( str, lookuptable )
 
-	return ( string.gsub( str, "{([_%a][_%w]*)}", lookuptable) )
+	return ( string.gsub( str, "{([_%a][_%w]*)}", lookuptable ) )
+
+end
+
+function string.CardinalToOrdinal( cardinal )
+
+	local basedigit = cardinal % 10
+
+	if ( basedigit == 1 ) then
+		if ( cardinal % 100 == 11 ) then
+			return cardinal .. "th"
+		end
+
+		return cardinal .. "st"
+	elseif ( basedigit == 2 ) then
+		if ( cardinal % 100 == 12 ) then
+			return cardinal .. "th"
+		end
+
+		return cardinal .. "nd"
+	elseif ( basedigit == 3 ) then
+		if ( cardinal % 100 == 13 ) then
+			return cardinal .. "th"
+		end
+
+		return cardinal .. "rd"
+	end
+
+	return cardinal .. "th"
 
 end

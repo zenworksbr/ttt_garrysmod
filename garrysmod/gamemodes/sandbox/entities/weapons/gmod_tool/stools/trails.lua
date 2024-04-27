@@ -67,12 +67,13 @@ local function SetTrails( ply, ent, data )
 	return trail_entity
 
 end
-duplicator.RegisterEntityModifier( "trail", SetTrails )
+if ( SERVER ) then
+	duplicator.RegisterEntityModifier( "trail", SetTrails )
+end
 
 function TOOL:LeftClick( trace )
 
 	if ( !IsValid( trace.Entity ) ) then return false end
-	if ( !trace.Entity:EntIndex() == 0 ) then return false end
 	if ( trace.Entity:IsPlayer() ) then return false end
 	if ( CLIENT ) then return true end
 
@@ -84,7 +85,7 @@ function TOOL:LeftClick( trace )
 	local length = self:GetClientNumber( "length", 5 )
 	local endsize = self:GetClientNumber( "endsize", 0 )
 	local startsize = self:GetClientNumber( "startsize", 32 )
-	local mat = self:GetClientInfo( "material", "sprites/obsolete" )
+	local mat = self:GetClientInfo( "material" )
 
 	local trail = SetTrails( self:GetOwner(), trace.Entity, {
 		Color = Color( r, g, b, a ),
@@ -108,7 +109,6 @@ end
 function TOOL:RightClick( trace )
 
 	if ( !IsValid( trace.Entity ) ) then return false end
-	if ( !trace.Entity:EntIndex() == 0 ) then return false end
 	if ( trace.Entity:IsPlayer() ) then return false end
 	if ( CLIENT ) then return true end
 

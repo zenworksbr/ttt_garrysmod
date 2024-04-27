@@ -22,6 +22,12 @@ function PANEL:OnMousePressed( mousecode )
 
 	self:CaptureMouse()
 
+	if ( !IsValid( self.Entity ) ) then
+		self.OrbitPoint = vector_origin
+		self.OrbitDistance = ( self.OrbitPoint - self.vCamPos ):Length()
+		return
+	end
+
 	-- Helpers for the orbit movement
 	local mins, maxs = self.Entity:GetModelBounds()
 	local center = ( mins + maxs ) / 2
@@ -30,10 +36,10 @@ function PANEL:OnMousePressed( mousecode )
 	self.OrbitPoint = hit1
 
 	local hit2 = util.IntersectRayWithPlane( self.vCamPos, self.aLookAngle:Forward(), vector_origin, Vector( 0, 1, 0 ) )
-	if ( ( !hit1 && hit2 ) || hit2 && hit2:Distance( self.Entity:GetPos() ) < hit1:Distance( self.Entity:GetPos() ) ) then self.OrbitPoint = hit2 end
+	if ( ( !hit1 and hit2 ) or hit2 and hit2:Distance( self.Entity:GetPos() ) < hit1:Distance( self.Entity:GetPos() ) ) then self.OrbitPoint = hit2 end
 
 	local hit3 = util.IntersectRayWithPlane( self.vCamPos, self.aLookAngle:Forward(), vector_origin, Vector( 1, 0, 0 ) )
-	if ( ( ( !hit1 || !hit2 ) && hit3 ) || hit3 && hit3:Distance( self.Entity:GetPos() ) < hit2:Distance( self.Entity:GetPos() ) ) then self.OrbitPoint = hit3 end
+	if ( ( ( !hit1 or !hit2 ) and hit3 ) or hit3 and hit3:Distance( self.Entity:GetPos() ) < hit2:Distance( self.Entity:GetPos() ) ) then self.OrbitPoint = hit3 end
 
 	self.OrbitPoint = self.OrbitPoint or center
 	self.OrbitDistance = ( self.OrbitPoint - self.vCamPos ):Length()
@@ -140,7 +146,7 @@ end
 function PANEL:OnMouseWheeled( dlta )
 
 	local scale = self:GetFOV() / 180
-	self.fFOV = self.fFOV + dlta * -10.0 * scale
+	self.fFOV = math.Clamp( self.fFOV + dlta * -10.0 * scale, 0.001, 179 )
 
 end
 

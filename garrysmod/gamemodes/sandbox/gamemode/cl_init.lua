@@ -7,13 +7,13 @@
 
 -----------------------------------------------------------]]
 
-include( 'shared.lua' )
-include( 'cl_spawnmenu.lua' )
-include( 'cl_notice.lua' )
-include( 'cl_hints.lua' )
-include( 'cl_worldtips.lua' )
-include( 'cl_search_models.lua' )
-include( 'gui/IconEditor.lua' )
+include( "shared.lua" )
+include( "cl_spawnmenu.lua" )
+include( "cl_notice.lua" )
+include( "cl_hints.lua" )
+include( "cl_worldtips.lua" )
+include( "cl_search_models.lua" )
+include( "gui/IconEditor.lua" )
 
 --
 -- Make BaseClass available
@@ -21,7 +21,7 @@ include( 'gui/IconEditor.lua' )
 DEFINE_BASECLASS( "gamemode_base" )
 
 
-local physgun_halo = CreateConVar( "physgun_halo", "1", { FCVAR_ARCHIVE }, "Draw the physics gun halo?" )
+local physgun_halo = CreateConVar( "physgun_halo", "1", { FCVAR_ARCHIVE }, "Draw the Physics Gun grab effect?" )
 
 function GM:Initialize()
 
