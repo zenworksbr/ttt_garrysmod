@@ -4,33 +4,20 @@ AddCSLuaFile()
 
 SWEP.HoldType               = "slam"
 
--- possible C4 balancing approach for small maps
--- local isMapBlackListed = function(arr, val)
---    for index, value in ipairs(arr) do
---       if val == value then
---          return true
---       end
---    end
+local blacklisted_maps = {
+   ttt_thematrix = true,
+   ttt_skyscraper_2015_v1p_f4 = true,
+   ttt_clue_se = true,
+   ttt_fastfood_a6 = true,
+   ttt_subway_b4 = true
+}
 
---    return false
--- end
+local function canBuy()
 
--- local canBuy = function()
--- local map = game.GetMap()
--- local blacklisted_maps = {
---    'ttt_skyscraper_2015_v1p_f4',
---    'ttt_clue_se',
---    'ttt_fastfood_a6',
---    'ttt_subway_b4'
--- }
--- print('O mapa ' .. map .. ' não terá C4? ' .. isMapBlackListed(blacklisted_maps, map))
+   if blacklisted_maps[game.GetMap()] then return nil end
 
--- if isMapBlackListed(blacklisted_maps, map) then
---    return nil
--- end
-
---    return '{ROLE_TRAITOR}'
--- end
+   return {ROLE_TRAITOR}
+end
 
 if CLIENT then
    SWEP.PrintName           = "C4"
@@ -53,7 +40,7 @@ end
 SWEP.Base                   = "weapon_tttbase"
 
 SWEP.Kind                   = WEAPON_EQUIP
-SWEP.CanBuy                 = {ROLE_TRAITOR} -- only traitors can buy
+SWEP.CanBuy                 = canBuy()
 SWEP.WeaponID               = AMMO_C4
 
 SWEP.UseHands               = true
