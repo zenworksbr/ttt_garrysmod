@@ -23,7 +23,7 @@ SWEP.Base = "weapon_tttbase"
 
 --[[Default GMod values]]--
 SWEP.Primary.Ammo = "SMG1"
-SWEP.Primary.Delay = 0.063
+SWEP.Primary.Delay = 0.09
 SWEP.Primary.Recoil	= 1.3
 SWEP.Primary.Cone = 0.032
 SWEP.Primary.Damage = 15
@@ -67,8 +67,11 @@ SWEP.AllowDrop = true
 -- If IsSilent is true, victims will not scream upon death.
 SWEP.IsSilent = false
 
+SWEP.IronSightsPos = Vector(5, -15, -2)
+SWEP.IronSightsAng = Vector(2.6, 1.37, 3.5)
+
 -- If NoSights is true, the weapon won't have ironsights
-SWEP.NoSights = true
+SWEP.NoSights = false
 
 -- Add some zoom to the scope for this gun
 function SWEP:SecondaryAttack()

@@ -23,10 +23,11 @@ SWEP.Base = "weapon_tttbase"
 
 --[[Default GMod values]]--
 SWEP.Primary.Ammo = "SMG1"
-SWEP.Primary.Delay = 0.08
+SWEP.Primary.Delay = 0.095
 SWEP.Primary.Recoil = 0.8
-SWEP.Primary.Cone = 0.025
-SWEP.Primary.Damage = 17
+SWEP.Primary.Cone = 0.035
+SWEP.Primary.Damage = 14
+SWEP.HeadshotMultiplier = 1.6
 SWEP.Primary.Automatic = true
 SWEP.Primary.ClipSize = 30
 SWEP.Primary.ClipMax = 60
@@ -50,7 +51,7 @@ SWEP.WorldModel = Model("models/weapons/w_rif_famas.mdl")
 SWEP.IronSightsPos = Vector(-6.24, -2.757, 1.2)
 SWEP.IronSightsAng = Vector(0.2, 0, -1)
 
-SWEP.NoSights = true
+SWEP.NoSights = false
 
 --[[TTT config values]]--
 

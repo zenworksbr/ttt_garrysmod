@@ -38,6 +38,7 @@ SWEP.WorldModel          = "models/weapons/w_smg_mac10.mdl"
 
 SWEP.IronSightsPos       = Vector(-8.921, -9.528, 2.9)
 SWEP.IronSightsAng       = Vector(0.699, -5.301, -7)
+SWEP.NoSights            = false
 
 SWEP.DeploySpeed         = 3
 

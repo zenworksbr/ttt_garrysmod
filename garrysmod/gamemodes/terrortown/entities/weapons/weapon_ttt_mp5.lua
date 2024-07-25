@@ -21,10 +21,10 @@ SWEP.Base = "weapon_tttbase"
 
 --[[Default GMod values]]--
 SWEP.Primary.Ammo = "SMG1"
-SWEP.Primary.Delay = 0.08
+SWEP.Primary.Delay = 0.1
 SWEP.Primary.Recoil	= 0.6
 SWEP.Primary.Cone = 0.03
-SWEP.Primary.Damage = 16
+SWEP.Primary.Damage = 12
 SWEP.HeadshotMultiplier = 2
 SWEP.Primary.Automatic = true
 SWEP.Primary.ClipSize = 30

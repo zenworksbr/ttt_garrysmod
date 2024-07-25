@@ -25,7 +25,7 @@ SWEP.HoldType			= "shotgun"
 SWEP.Primary.Delay       = 0.85
 SWEP.Primary.Recoil      = 10
 SWEP.Primary.Automatic   = false
-SWEP.Primary.Damage      = 12
+SWEP.Primary.Damage      = 6
 SWEP.Primary.Cone        = 0.085
 SWEP.Primary.Ammo        = "Buckshot"
 SWEP.Primary.ClipSize    = 8
@@ -35,6 +35,9 @@ SWEP.Primary.NumShots 	 = 12
 SWEP.Primary.Sound       = Sound( "Weapon_M3.Single" )
 SWEP.HeadshotMultiplier  = 2
 SWEP.reloadtimer = 0
+
+SWEP.IronSightsPos = Vector(5.719, 0, 3.4)
+SWEP.IronSightsAng = Vector(0, 0, 0)
 
 SWEP.ViewModel  = "models/weapons/v_shot_m3super90.mdl"
 SWEP.WorldModel = "models/weapons/w_shot_m3super90.mdl"
@@ -50,7 +53,7 @@ SWEP.CanBuy = {}
 SWEP.LimitedStock = false
 SWEP.AllowDrop = true
 SWEP.IsSilent = false
-SWEP.NoSights = true
+SWEP.NoSights = false
 
 if CLIENT then
    -- Text shown in the equip menu

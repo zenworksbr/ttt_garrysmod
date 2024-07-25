@@ -22,10 +22,10 @@ SWEP.Base = "weapon_tttbase"
 --[[Default GMod values]]--
 SWEP.Zoom         = 40
 SWEP.Primary.Ammo = "SMG1"
-SWEP.Primary.Delay = 0.1
+SWEP.Primary.Delay = 0.13
 SWEP.Primary.Recoil = 1
 SWEP.Primary.Cone = 0.028
-SWEP.Primary.Damage = 25
+SWEP.Primary.Damage = 17
 SWEP.Primary.Automatic = true
 SWEP.Primary.ClipSize = 30
 SWEP.Primary.ClipMax = 60
