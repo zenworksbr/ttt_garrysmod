@@ -39,8 +39,6 @@ SWEP.UseHands              = true
 SWEP.ViewModel             = "models/weapons/cstrike/c_shot_xm1014.mdl"
 SWEP.WorldModel            = "models/weapons/w_shot_xm1014.mdl"
 
-SWEP.NoSights               = false
-
 SWEP.reloadtimer           = 0
 
 SWEP.IronSightsPos         = Vector(-6.881, -9.214, 2.66)
