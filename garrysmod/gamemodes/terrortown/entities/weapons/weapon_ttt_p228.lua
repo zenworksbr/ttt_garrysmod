@@ -34,8 +34,8 @@ SWEP.AmmoEnt = "item_ammo_pistol_ttt"
 SWEP.ViewModel  = "models/weapons/v_pist_p228.mdl"
 SWEP.WorldModel = "models/weapons/w_pist_p228.mdl"
 
-SWEP.IronSightsPos = Vector(-5.95, -9, 2.87)
-SWEP.IronSightsAng = Vector(-1, -0.03, 0)
+SWEP.IronSightsPos = Vector(4.8, -5, 3.5)
+SWEP.IronSightsAng = Vector(-2, 1.9, 0)
 
 SWEP.Primary.Sound = Sound( "Weapon_P228.Single" )
 SWEP.NoSights = false

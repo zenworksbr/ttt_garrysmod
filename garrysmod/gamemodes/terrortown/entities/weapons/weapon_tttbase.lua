@@ -139,7 +139,7 @@ if CLIENT then
       end
 
       local client = LocalPlayer()
-      -- if disable_crosshair:GetBool() or (not IsValid(client)) then return end
+      if disable_crosshair:GetBool() or (not IsValid(client)) then return end
 
       local sights = (not self.NoSights) and self:GetIronsights()
 
