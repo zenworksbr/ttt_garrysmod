@@ -70,6 +70,13 @@ function SWEP:SetupDataTables()
 end
 
 function SWEP:PrimaryAttack()
+
+   -- kkkknockback effect to self
+   if IsValid(self.Owner) and self.Owner:IsPlayer() then
+      local knockback = self.Owner:GetAimVector() * -300 + Vector(0, 0, 200)
+      self.Owner:SetVelocity(knockback)
+   end
+
    if self.IsCharging then return end
    
    self.Primary.Delay = 4	-- Min Time of waiting for the gun to recharge
@@ -81,6 +88,8 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
+
+
    if self.IsCharging then return end
 
    self:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
@@ -190,6 +199,11 @@ function SWEP:ChargedAttack()
    end
 
    self:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
+   if IsValid(self.Owner) and self.Owner:IsPlayer() then
+      
+      local knockback_force = Vector(0, 0, 1) + self.Owner:GetAimVector() * -300 * force_up / 480
+      self.Owner:SetVelocity(knockback_force)
+   end
    self:SetNextSecondaryFire( CurTime() + self.Primary.Delay )
 
    self:FirePulse(force_fwd, force_up)
