@@ -16,7 +16,7 @@ if CLIENT then
       desc = "newton_desc"
    };
 
-   SWEP.Icon               = "vgui/ttt/icon_supernewtonbs"
+   SWEP.Icon               = "vgui/ttt/icon_launch"
 end
 
 SWEP.Base                  = "weapon_tttbase"
