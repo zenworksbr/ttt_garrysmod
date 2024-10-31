@@ -37,6 +37,8 @@ SWEP.Secondary.Sound = Sound("Default.Zoom")
 
 --[[Model settings]]--
 SWEP.HoldType = "smg"
+SWEP.OriginalHT = "smg"
+SWEP.Zoom      = 20
 SWEP.ViewModel = Model("models/weapons/cstrike/c_smg_p90.mdl")
 SWEP.WorldModel	= Model("models/weapons/w_smg_p90.mdl")
 
@@ -49,17 +51,17 @@ SWEP.Kind = WEAPON_HEAVY
 
 -- If AutoSpawnable is true and SWEP.Kind is not WEAPON_EQUIP1/2,
 -- then this gun can be spawned as a random weapon.
-SWEP.AutoSpawnable = true
+SWEP.AutoSpawnable = false
 
 -- The AmmoEnt is the ammo entity that can be picked up when carrying this gun.
 SWEP.AmmoEnt = "item_ammo_smg1_ttt"
 
 -- CanBuy is a table of ROLE_* entries like ROLE_TRAITOR and ROLE_DETECTIVE. If
 -- a role is in this table, those players can buy this.
--- SWEP.CanBuy = {}
+SWEP.CanBuy = {ROLE_DETECTIVE}
 
 -- If LimitedStock is true, you can only buy one per round.
--- SWEP.LimitedStock = true
+SWEP.LimitedStock = true
 
 -- If AllowDrop is false, players can't manually drop the gun with Q
 SWEP.AllowDrop = true
@@ -92,8 +94,10 @@ end
 function SWEP:SetZoom(state)
 	if (SERVER and IsValid(self.Owner) and self.Owner:IsPlayer()) then
 		if (state) then
-			self.Owner:SetFOV(20, 0.3)
+			self.Owner:SetFOV(self.Zoom, 0.3)
+			self:SetHoldType('rpg')
 		else
+			self:SetHoldType(self.OriginalHT)
 			self.Owner:SetFOV(0, 0.2)
 		end
 	end
