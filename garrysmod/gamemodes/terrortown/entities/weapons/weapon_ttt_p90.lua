@@ -38,7 +38,7 @@ SWEP.Secondary.Sound = Sound("Default.Zoom")
 --[[Model settings]]--
 SWEP.HoldType = "smg"
 SWEP.OriginalHT = "smg"
-SWEP.Zoom      = 20
+SWEP.Zoom      = 30
 SWEP.ViewModel = Model("models/weapons/cstrike/c_smg_p90.mdl")
 SWEP.WorldModel	= Model("models/weapons/w_smg_p90.mdl")
 
