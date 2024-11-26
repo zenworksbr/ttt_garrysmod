@@ -522,7 +522,8 @@ function ents.TTT.CanImportEntities(map)
 end
 
 local function ImportSettings(map)
-   if not ents.TTT.CanImportEntities(map) then return end
+   local fname = ents.TTT.CanImportEntities(map)
+   if not fname then return end
 
    local fname = "data/ttt/maps/" .. map .. "_ttt.txt"
    local buf = file.Read(fname, "GAME")
