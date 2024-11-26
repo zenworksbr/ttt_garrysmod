@@ -749,8 +749,10 @@ end
 
 function GM:ScalePlayerDamage(ply, hitgroup, dmginfo)
    if dmginfo:IsBulletDamage() and ply:HasEquipmentItem(EQUIP_ARMOR) then
-      -- Body armor nets you a damage reduction.
-      dmginfo:ScaleDamage(0.7)
+      if ply:LastHitGroup() != HITGROUP_HEAD then
+         -- Body armor nets you a damage reduction.
+         dmginfo:ScaleDamage(0.7)
+      end
    end
 
    ply.was_headshot = false
