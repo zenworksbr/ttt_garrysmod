@@ -1,6 +1,7 @@
 AddCSLuaFile()
 
-SWEP.HoldType              = "pistol"
+SWEP.HoldType              = "revolver"
+SWEP.ReloadHoldType        = "pistol"
 
 if CLIENT then
    SWEP.PrintName             = "USP-S"
@@ -9,6 +10,7 @@ if CLIENT then
    SWEP.ViewModelFlip      = false
    SWEP.ViewModelFOV       = 70
    SWEP.UseHands           = true
+   
 
    SWEP.EquipMenuData = {
       type = "item_weapon",

@@ -10,7 +10,7 @@ end
 
 
 
-local Category = "Humans + Resistance"
+local Category = "#spawnmenu.category.humans_resistance"
 
 AddNPC( {
 	Class = "npc_alyx",
@@ -75,7 +75,7 @@ AddNPC( {
 	Class = "npc_citizen",
 	Category = Category,
 	KeyValues = { citizentype = CT_DOWNTRODDEN, SquadName = "resistance" },
-	Weapons = { "" } -- Tells the spawnmenu that this NPC can use weapons
+	Weapons = { "" } -- Tells the spawnmenu that this NPC can use weapons, but doesn't have any default ones
 } )
 
 AddNPC( {
@@ -111,6 +111,13 @@ AddNPC( {
 	KeyValues = { citizentype = CT_REFUGEE, SquadName = "resistance" },
 	Weapons = { "weapon_pistol", "weapon_smg1" }
 }, "Refugee" )
+
+AddNPC( {
+	Class = "npc_citizen",
+	Category = Category,
+	KeyValues = { citizentype = CT_REBEL, SquadName = "combine", Hostile = "1" },
+	Weapons = { "weapon_pistol", "weapon_smg1", "weapon_ar2", "weapon_shotgun" }
+}, "npc_citizen_enemy" )
 
 if ( IsMounted( "ep2" ) ) then
 	AddNPC( {
@@ -158,7 +165,7 @@ if ( IsMounted( "episodic" ) ) then
 	}, "npc_rollermine_hacked" )
 end
 
-Category = "Zombies + Enemy Aliens"
+Category = "#spawnmenu.category.zombies_aliens"
 
 AddNPC( {
 	Class = "npc_zombie",
@@ -263,7 +270,7 @@ end
 
 
 
-Category = "Animals"
+Category = "#spawnmenu.category.animals"
 
 AddNPC( {
 	Class = "npc_monk",
@@ -291,7 +298,7 @@ AddNPC( {
 
 
 
-Category = "Combine"
+Category = "#spawnmenu.category.combine"
 
 AddNPC( {
 	Class = "npc_metropolice",
